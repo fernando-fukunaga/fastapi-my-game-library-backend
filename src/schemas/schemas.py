@@ -7,8 +7,8 @@ class Usuario(BaseModel):
     email: str
     username: str
     senha: str
-    plataformas: List[Plataforma]
-    jogos: List[Jogo]
+    #plataformas: List[Plataforma]
+    #jogos: List[Jogo]
 
 class Plataforma(BaseModel):
     id: Optional[int] = None
@@ -16,7 +16,7 @@ class Plataforma(BaseModel):
     usuario: Usuario
     fabricante: str
     observacoes: Optional[str] = "Sem observações"
-    jogos: List[Jogo]
+    #jogos: List[Jogo]
 
 class Jogo(BaseModel):
     id: int
