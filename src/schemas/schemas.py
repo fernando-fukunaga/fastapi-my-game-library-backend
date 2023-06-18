@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, List
+from typing import Optional
 
 class Usuario(BaseModel):
     id: Optional[int] = None
@@ -7,8 +7,6 @@ class Usuario(BaseModel):
     email: str
     username: str
     senha: str
-    #plataformas: List[Plataforma]
-    #jogos: List[Jogo]
 
 class Plataforma(BaseModel):
     id: Optional[int] = None
@@ -16,16 +14,14 @@ class Plataforma(BaseModel):
     id_usuario: int
     fabricante: str
     observacoes: Optional[str] = "Sem observações"
-    #jogos: List[Jogo]
-
+    
 class Jogo(BaseModel):
-    id: int
+    id: Optional[int] = None
     nome: str
-    plataforma: Plataforma
+    id_plataforma: int
     ano: int
     categoria: str
     desenvolvedora: str
-    usuario: Usuario
+    id_usuario: int
     observacoes: Optional[str] = "Sem observações"
     status: str
-    

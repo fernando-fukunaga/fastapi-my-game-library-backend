@@ -16,3 +16,15 @@ class Plataforma(Base):
     id_usuario = Column(Integer, ForeignKey("usuario.id"))
     fabricante = Column(String)
     observacoes = Column(String)
+
+class Jogo(Base):
+    __tablename__ = "jogo"
+    id = Column(Integer, primary_key=True, index=True)
+    nome = Column(String)
+    id_plataforma = Column(Integer, ForeignKey("plataforma.id"))
+    ano = Column(Integer)
+    categoria = Column(String)
+    desenvolvedora = Column(String)
+    id_usuario = Column(Integer, ForeignKey("usuario.id"))
+    observacoes = Column(String)
+    status = Column(String)
