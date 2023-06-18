@@ -13,7 +13,7 @@ class Usuario(BaseModel):
 class Plataforma(BaseModel):
     id: Optional[int] = None
     nome: str
-    usuario: Usuario
+    id_usuario: int
     fabricante: str
     observacoes: Optional[str] = "Sem observações"
     #jogos: List[Jogo]
