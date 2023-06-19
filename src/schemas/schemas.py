@@ -8,12 +8,26 @@ class Usuario(BaseModel):
     username: str
     senha: str
 
+    class Config:
+        orm_mode = True
+
+class UsuarioSimples(BaseModel):
+    id: Optional[int] = None
+    nome: str
+    username: str
+
+    class Config:
+        orm_mode = True
+
 class Plataforma(BaseModel):
     id: Optional[int] = None
     nome: str
     id_usuario: int
     fabricante: str
     observacoes: Optional[str] = "Sem observações"
+    
+    class Config:
+        orm_mode = True
     
 class Jogo(BaseModel):
     id: Optional[int] = None
@@ -25,3 +39,6 @@ class Jogo(BaseModel):
     id_usuario: int
     observacoes: Optional[str] = "Sem observações"
     status: str
+    
+    class Config:
+        orm_mode = True
