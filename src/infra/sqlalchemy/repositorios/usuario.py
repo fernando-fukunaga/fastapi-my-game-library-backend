@@ -18,5 +18,13 @@ class RepositorioUsuario:
         return model_usuario
     
     def listar(self):
-        lista_usuarios = self.banco_de_dados.query(models.Usuario).all()
-        return lista_usuarios
+        return self.banco_de_dados.query(models.Usuario).all()
+    
+    def obter(self, id_usuario: int):
+        return self.banco_de_dados.query(models.Usuario).filter_by(id=id_usuario).first()
+    
+    def remover(self, id_usuario: int):
+        usuario_a_ser_excluido = self.obter(id_usuario)
+        self.banco_de_dados.delete(usuario_a_ser_excluido)
+        self.banco_de_dados.commit()
+        return {"msg":"removido"}

@@ -18,5 +18,13 @@ class RepositorioPlataforma:
         return model_plataforma
 
     def listar(self):
-        lista_plataformas = self.banco_de_dados.query(models.Plataforma).all()
-        return lista_plataformas
+        return self.banco_de_dados.query(models.Plataforma).all()
+    
+    def obter(self, id_plataforma: int):
+        return self.banco_de_dados.query(models.Plataforma).filter_by(id=id_plataforma).first()
+    
+    def remover(self, id_plataforma: int):
+        plataforma_a_ser_excluida = self.obter(id_plataforma)
+        self.banco_de_dados.delete(plataforma_a_ser_excluida)
+        self.banco_de_dados.commit()
+        return {"msg":"removido"}

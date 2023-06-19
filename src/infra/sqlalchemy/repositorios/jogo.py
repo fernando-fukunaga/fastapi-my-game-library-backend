@@ -22,5 +22,13 @@ class RepositorioJogo:
         return model_jogo
 
     def listar(self):
-        lista_jogos = self.banco_de_dados.query(models.Jogo).all()
-        return lista_jogos
+        return self.banco_de_dados.query(models.Jogo).all()
+    
+    def obter(self, id_jogo: int):
+        return self.banco_de_dados.query(models.Jogo).filter_by(id=id_jogo).first()
+    
+    def remover(self, id_jogo: int):
+        jogo_a_ser_excluido = self.obter(id_jogo)
+        self.banco_de_dados.delete(jogo_a_ser_excluido)
+        self.banco_de_dados.commit()
+        return {"msg":"removido"}
