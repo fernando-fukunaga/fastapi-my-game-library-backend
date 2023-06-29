@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from src.schemas import schemas
+from src.schemas import schemas_plataforma
 from src.infra.sqlalchemy.models import models
 
 class RepositorioPlataforma:
@@ -7,7 +7,7 @@ class RepositorioPlataforma:
     def __init__(self, banco_de_dados: Session):
         self.banco_de_dados = banco_de_dados
 
-    def criar(self, schema_plataforma: schemas.Plataforma):
+    def criar(self, schema_plataforma: schemas_plataforma.PlataformaCadastro):
         model_plataforma = models.Plataforma(nome=schema_plataforma.nome,                                            
                                              id_usuario=schema_plataforma.id_usuario,
                                              fabricante=schema_plataforma.fabricante,
