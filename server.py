@@ -11,7 +11,7 @@ criar_banco_de_dados()
 app = FastAPI()
 
 @app.post("/usuarios", response_model=schemas.UsuarioDadosSimples, status_code=201)
-async def cadastar_usuarios(usuario: schemas.UsuarioCadastro, session: Session = Depends(criar_sessao)):
+async def cadastar_usuario(usuario: schemas.UsuarioCadastro, session: Session = Depends(criar_sessao)):
     return RepositorioUsuario(session).criar(usuario)
 
 @app.get("/usuarios", response_model=List[schemas.UsuarioDadosSemLista])
@@ -22,6 +22,10 @@ async def listar_usuarios(session: Session = Depends(criar_sessao)):
 async def obter_usuario(id_usuario: int, session: Session = Depends(criar_sessao)):
     return RepositorioUsuario(session).obter(id_usuario)
 
+@app.put("/usuarios/{id_usuario}", response_model=schemas.UsuarioDadosSimples)
+async def atualizar_usuario(id_usuario: int, usuario: schemas.UsuarioCadastro, session: Session = Depends(criar_sessao)):
+    return RepositorioUsuario(session).atualizar(id_usuario, usuario)
+
 @app.delete("/usuarios/{id_usuario}")
 async def remover_usuario(id_usuario: int, session: Session = Depends(criar_sessao)):
     return RepositorioUsuario(session).remover(id_usuario)
@@ -29,7 +33,7 @@ async def remover_usuario(id_usuario: int, session: Session = Depends(criar_sess
 #================================================================================================================
 
 @app.post("/plataformas", response_model=schemas.PlataformaDadosSimples, status_code=201)
-async def cadastrar_plataformas(plataforma: schemas.PlataformaCadastro, session: Session = Depends(criar_sessao)):
+async def cadastrar_plataforma(plataforma: schemas.PlataformaCadastro, session: Session = Depends(criar_sessao)):
     return RepositorioPlataforma(session).criar(plataforma)
 
 @app.get("/plataformas", response_model=List[schemas.PlataformaDadosSemLista])
@@ -47,7 +51,7 @@ async def remover_plataforma(id_plataforma: int, session: Session = Depends(cria
 #================================================================================================================
 
 @app.post("/jogos", response_model=schemas.JogoDadosSimples, status_code=201)
-async def cadastrar_jogos(jogo: schemas.JogoCadastro, session: Session = Depends(criar_sessao)):
+async def cadastrar_jogo(jogo: schemas.JogoCadastro, session: Session = Depends(criar_sessao)):
     return RepositorioJogo(session).criar(jogo)
 
 @app.get("/jogos", response_model=List[schemas.JogoDadosSemLista])
