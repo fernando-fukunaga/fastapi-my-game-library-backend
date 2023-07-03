@@ -24,6 +24,13 @@ async def obter_jogo(id_jogo: int, session: Session = Depends(criar_sessao)):
     return RepositorioJogo(session).obter(id_jogo)
 
 
+@router.put("/jogos/{id_jogo}", response_model=schemas.JogoDadosSimples)
+async def atualizar_jogo(id_jogo: int,
+                         jogo: schemas.JogoPut,
+                         session: Session = Depends(criar_sessao)):
+    return RepositorioJogo(session).atualizar(id_jogo, jogo)
+
+
 @router.delete("/jogos/{id_jogo}")
 async def remover_jogo(id_jogo: int, session: Session = Depends(criar_sessao)):
     return RepositorioJogo(session).remover(id_jogo)

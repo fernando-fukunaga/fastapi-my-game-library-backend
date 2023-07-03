@@ -32,7 +32,6 @@ class RepositorioPlataforma:
         update_statement = (update(models.Plataforma).
                             where(models.Plataforma.id == id_plataforma).
                             values(nome=schema_plataforma.nome,
-                                   id_usuario=schema_plataforma.id_usuario,
                                    fabricante=schema_plataforma.fabricante,
                                    observacoes=schema_plataforma.observacoes))
         self.session.execute(update_statement)

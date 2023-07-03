@@ -28,6 +28,14 @@ async def obter_plataforma(id_plataforma: int,
     return RepositorioPlataforma(session).obter(id_plataforma)
 
 
+@router.put("/plataformas/{id_plataforma}", 
+            response_model=schemas.PlataformaDadosSimples)
+async def atualizar_plataforma(id_plataforma: int,
+                               plataforma: schemas.PlataformaPut,
+                               session: Session = Depends(criar_sessao)):
+    return RepositorioPlataforma(session).atualizar(id_plataforma, plataforma)
+
+
 @router.delete("/plataformas/{id_plataforma}")
 async def remover_plataforma(id_plataforma: int,
                              session: Session = Depends(criar_sessao)):

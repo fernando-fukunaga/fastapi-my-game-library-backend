@@ -2,7 +2,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.routers import routers_usuario, routers_plataforma, routers_jogo
 
-app = FastAPI()
+
+def create_app() -> FastAPI:
+    app = FastAPI()
+    app.include_router(routers_usuario.router)
+    app.include_router(routers_plataforma.router)
+    app.include_router(routers_jogo.router)
+
+    return app
+
+
+app = create_app()
 
 origins = ["http://localhost:8000"]
 
@@ -11,7 +21,3 @@ app.add_middleware(CORSMiddleware,
                    allow_credentials=True,
                    allow_methods=["*"],
                    allow_headers=["*"])
-
-app.include_router(routers_usuario.router)
-app.include_router(routers_plataforma.router)
-app.include_router(routers_jogo.router)

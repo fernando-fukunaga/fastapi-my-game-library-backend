@@ -24,6 +24,15 @@ class PlataformaCadastro(BaseModel):
         orm_mode = True
 
 
+class PlataformaPut(BaseModel):
+    nome: str
+    fabricante: str
+    observacoes: Optional[str] = "Sem observações"
+
+    class Config:
+        orm_mode = True        
+
+
 class JogoCadastro(BaseModel):
     nome: str
     id_plataforma: int
@@ -36,6 +45,18 @@ class JogoCadastro(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class JogoPut(BaseModel):
+    nome: str
+    ano: int
+    categoria: str
+    desenvolvedora: str
+    observacoes: Optional[str] = "Sem observações"
+    progresso: float
+
+    class Config:
+        orm_mode = True        
 
 # ===========RESPONSES===============
 
