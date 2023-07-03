@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from sqlalchemy.orm import Session
 from src.infra.sqlalchemy.config.database import criar_banco_de_dados, criar_sessao
@@ -9,6 +10,14 @@ from src.infra.sqlalchemy.repositorios.repositorio_jogo import RepositorioJogo
 
 criar_banco_de_dados()
 app = FastAPI()
+
+origins = ["http://localhost:8000"]
+
+app.add_middleware(CORSMiddleware,
+                   allow_origins=origins,
+                   allow_credentials=True,
+                   allow_methods=["*"],
+                   allow_headers=["*"])
 
 
 @app.post("/usuarios", response_model=schemas.UsuarioDadosSimples, status_code=201)
