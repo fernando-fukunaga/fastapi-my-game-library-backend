@@ -1,0 +1,102 @@
+from pydantic import BaseModel
+from typing import List, Optional
+
+#===========REQUESTS===============
+
+class UsuarioCadastro(BaseModel):
+    nome: str
+    email: str
+    username: str
+    senha: str
+
+    class Config:
+        orm_mode = True
+
+class PlataformaCadastro(BaseModel):
+    nome: str
+    id_usuario: int
+    fabricante: str
+    observacoes: Optional[str] = "Sem observações"
+    
+    class Config:
+        orm_mode = True
+
+class JogoCadastro(BaseModel):
+    nome: str
+    id_plataforma: int
+    ano: int
+    categoria: str
+    desenvolvedora: str
+    id_usuario: int
+    observacoes: Optional[str] = "Sem observações"
+    progresso: float
+    
+    class Config:
+        orm_mode = True
+
+#===========RESPONSES===============     
+
+class UsuarioDadosSemLista(BaseModel):
+    id: int
+    nome: str
+    email: str
+    username: str
+
+    class Config:
+        orm_mode = True
+
+class PlataformaDadosSemLista(BaseModel):
+    id: int
+    nome: str
+    fabricante: str
+    observacoes: str
+
+    class Config:
+        orm_mode = True
+
+class JogoDadosSemLista(BaseModel):
+    id: int
+    nome: str
+    ano: int
+    categoria: str
+    observacoes: str
+    progresso: float
+
+    class Config:
+        orm_mode = True
+
+class UsuarioDadosSimples(BaseModel):
+    id: int
+    nome: str
+    email: str
+    username: str
+    plataformas: List[PlataformaDadosSemLista]
+    jogos: List[JogoDadosSemLista]
+
+    class Config:
+        orm_mode = True
+
+class PlataformaDadosSimples(BaseModel):
+    id: int
+    nome: str
+    fabricante: str
+    observacoes: str
+    usuario: UsuarioDadosSemLista
+    jogos: List[JogoDadosSemLista]
+    
+    class Config:
+        orm_mode = True
+
+class JogoDadosSimples(BaseModel):
+    id: int
+    nome: str
+    ano: int
+    categoria: str
+    desenvolvedora: str
+    observacoes: str
+    progresso: float
+    usuario: UsuarioDadosSemLista
+    plataforma: PlataformaDadosSemLista
+
+    class Config:
+        orm_mode = True

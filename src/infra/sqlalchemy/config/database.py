@@ -13,9 +13,9 @@ Base = declarative_base()
 def criar_banco_de_dados():
     Base.metadata.create_all(bind=engine)
 
-def get_banco_de_dados():
-    banco_de_dados = SessionLocal()
+def criar_sessao():
+    session = SessionLocal()
     try:
-        yield banco_de_dados
+        yield session
     finally:
-        banco_de_dados.close()
+        session.close()
