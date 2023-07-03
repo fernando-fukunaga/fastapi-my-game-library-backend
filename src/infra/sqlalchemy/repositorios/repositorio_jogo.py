@@ -3,6 +3,7 @@ from sqlalchemy import update
 from src.infra.sqlalchemy.models import models
 from src.schemas import schemas
 
+
 class RepositorioJogo:
 
     def __init__(self, session: Session):
@@ -24,13 +25,13 @@ class RepositorioJogo:
 
     def listar(self):
         return self.session.query(models.Jogo).all()
-    
+
     def obter(self, id_jogo: int):
         return self.session.query(models.Jogo).filter_by(id=id_jogo).first()
-    
+
     def atualizar(self, id_jogo: int, schema_jogo: schemas.JogoCadastro):
         update_statement = (update(models.Jogo).
-                            where(models.Jogo.id==id_jogo).
+                            where(models.Jogo.id == id_jogo).
                             values(nome=schema_jogo.nome,
                                    id_plataforma=schema_jogo.id_plataforma,
                                    ano=schema_jogo.ano,
@@ -42,9 +43,9 @@ class RepositorioJogo:
         self.session.execute(update_statement)
         self.session.commit()
         return self.obter(id_jogo)
-    
+
     def remover(self, id_jogo: int):
         jogo_a_ser_excluido = self.obter(id_jogo)
         self.session.delete(jogo_a_ser_excluido)
         self.session.commit()
-        return {"msg":"removido"}
+        return {"msg": "removido"}

@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, DECIMAL, ForeignKey
 from sqlalchemy.orm import relationship
 from src.infra.sqlalchemy.config.database import Base
 
+
 class Usuario(Base):
     __tablename__ = "usuario"
 
@@ -13,6 +14,7 @@ class Usuario(Base):
 
     plataformas = relationship("Plataforma", back_populates="usuario")
     jogos = relationship("Jogo", back_populates="usuario")
+
 
 class Plataforma(Base):
     __tablename__ = "plataforma"
@@ -26,6 +28,7 @@ class Plataforma(Base):
     usuario = relationship("Usuario", back_populates="plataformas")
     jogos = relationship("Jogo", back_populates="plataforma")
 
+
 class Jogo(Base):
     __tablename__ = "jogo"
 
@@ -37,7 +40,7 @@ class Jogo(Base):
     desenvolvedora = Column(String(15))
     id_usuario = Column(Integer, ForeignKey("usuario.id"))
     observacoes = Column(String(100))
-    progresso = Column(DECIMAL(3,2))
+    progresso = Column(DECIMAL(3, 2))
 
     usuario = relationship("Usuario", back_populates="jogos")
     plataforma = relationship("Plataforma", back_populates="jogos")

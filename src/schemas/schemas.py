@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
-#===========REQUESTS===============
+# ===========REQUESTS===============
+
 
 class UsuarioCadastro(BaseModel):
     nome: str
@@ -12,14 +13,16 @@ class UsuarioCadastro(BaseModel):
     class Config:
         orm_mode = True
 
+
 class PlataformaCadastro(BaseModel):
     nome: str
     id_usuario: int
     fabricante: str
     observacoes: Optional[str] = "Sem observações"
-    
+
     class Config:
         orm_mode = True
+
 
 class JogoCadastro(BaseModel):
     nome: str
@@ -30,11 +33,12 @@ class JogoCadastro(BaseModel):
     id_usuario: int
     observacoes: Optional[str] = "Sem observações"
     progresso: float
-    
+
     class Config:
         orm_mode = True
 
-#===========RESPONSES===============     
+# ===========RESPONSES===============
+
 
 class UsuarioDadosSemLista(BaseModel):
     id: int
@@ -45,6 +49,7 @@ class UsuarioDadosSemLista(BaseModel):
     class Config:
         orm_mode = True
 
+
 class PlataformaDadosSemLista(BaseModel):
     id: int
     nome: str
@@ -53,6 +58,7 @@ class PlataformaDadosSemLista(BaseModel):
 
     class Config:
         orm_mode = True
+
 
 class JogoDadosSemLista(BaseModel):
     id: int
@@ -65,6 +71,7 @@ class JogoDadosSemLista(BaseModel):
     class Config:
         orm_mode = True
 
+
 class UsuarioDadosSimples(BaseModel):
     id: int
     nome: str
@@ -76,6 +83,7 @@ class UsuarioDadosSimples(BaseModel):
     class Config:
         orm_mode = True
 
+
 class PlataformaDadosSimples(BaseModel):
     id: int
     nome: str
@@ -83,9 +91,10 @@ class PlataformaDadosSimples(BaseModel):
     observacoes: str
     usuario: UsuarioDadosSemLista
     jogos: List[JogoDadosSemLista]
-    
+
     class Config:
         orm_mode = True
+
 
 class JogoDadosSimples(BaseModel):
     id: int

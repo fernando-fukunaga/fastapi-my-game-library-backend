@@ -10,8 +10,10 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+
 def criar_banco_de_dados():
     Base.metadata.create_all(bind=engine)
+
 
 def criar_sessao():
     session = SessionLocal()
