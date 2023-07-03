@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import update
 from src.schemas import schemas
@@ -23,8 +24,14 @@ class RepositorioUsuario:
         return self.session.query(models.Usuario).all()
 
     def obter(self, id_usuario: int):
-        return self.session.query(
-            models.Usuario).filter_by(id=id_usuario).first()
+        usuario_existe = self.session.query(
+            models.Usuario).filter_by(id=id_usuario).all()
+        
+        if not usuario_existe:
+            raise HTTPException(status_code=404, 
+                                detail="Usuario não encontrado!")
+        
+        return usuario_existe
 
     def atualizar(self, id_usuario: int,
                   schema_usuario: schemas.UsuarioCadastro):
