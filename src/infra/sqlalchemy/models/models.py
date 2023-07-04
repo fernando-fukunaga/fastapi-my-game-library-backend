@@ -13,7 +13,6 @@ class Usuario(Base):
     senha = Column(String(100))
 
     plataformas = relationship("Plataforma", back_populates="usuario")
-    jogos = relationship("Jogo", back_populates="usuario")
 
 
 class Plataforma(Base):
@@ -38,9 +37,7 @@ class Jogo(Base):
     ano = Column(Integer)
     categoria = Column(String(20))
     desenvolvedora = Column(String(15))
-    id_usuario = Column(Integer, ForeignKey("usuario.id"))
     observacoes = Column(String(100))
     progresso = Column(DECIMAL(3, 2))
 
-    usuario = relationship("Usuario", back_populates="jogos")
     plataforma = relationship("Plataforma", back_populates="jogos")

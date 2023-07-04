@@ -15,9 +15,11 @@ def criar_banco_de_dados():
     Base.metadata.create_all(bind=engine)
 
 
-def criar_sessao():
+def obter_sessao():
     session = SessionLocal()
+
     try:
         yield session
+
     finally:
         session.close()
