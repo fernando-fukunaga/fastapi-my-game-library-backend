@@ -15,7 +15,6 @@ class RepositorioJogo:
                                  ano=schema_jogo.ano,
                                  categoria=schema_jogo.categoria,
                                  desenvolvedora=schema_jogo.desenvolvedora,
-                                 id_usuario=schema_jogo.id_usuario,
                                  observacoes=schema_jogo.observacoes,
                                  progresso=schema_jogo.progresso)
         self.session.add(model_jogo)
@@ -42,7 +41,7 @@ class RepositorioJogo:
             desenvolvedora=schema_jogo.desenvolvedora,
             observacoes=schema_jogo.observacoes,
             progresso=schema_jogo.progresso)
-        
+
         self.session.execute(update_statement)
         self.session.commit()
         return self.obter(id_jogo)

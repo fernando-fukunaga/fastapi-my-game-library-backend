@@ -30,7 +30,7 @@ class PlataformaPut(BaseModel):
     observacoes: Optional[str] = "Sem observações"
 
     class Config:
-        orm_mode = True        
+        orm_mode = True
 
 
 class JogoCadastro(BaseModel):
@@ -39,7 +39,6 @@ class JogoCadastro(BaseModel):
     ano: int
     categoria: str
     desenvolvedora: str
-    id_usuario: int
     observacoes: Optional[str] = "Sem observações"
     progresso: float
 
@@ -56,7 +55,7 @@ class JogoPut(BaseModel):
     progresso: float
 
     class Config:
-        orm_mode = True        
+        orm_mode = True
 
 # ===========RESPONSES===============
 
@@ -93,13 +92,23 @@ class JogoDadosSemLista(BaseModel):
         orm_mode = True
 
 
+class PlataformaDadosParaUsuarioSimples(BaseModel):
+    id: int
+    nome: str
+    fabricante: str
+    observacoes: str
+    jogos: List[JogoDadosSemLista]
+
+    class Config:
+        orm_mode = True
+
+
 class UsuarioDadosSimples(BaseModel):
     id: int
     nome: str
     email: str
     username: str
-    plataformas: List[PlataformaDadosSemLista]
-    jogos: List[JogoDadosSemLista]
+    plataformas: List[PlataformaDadosParaUsuarioSimples]
 
     class Config:
         orm_mode = True
@@ -125,7 +134,6 @@ class JogoDadosSimples(BaseModel):
     desenvolvedora: str
     observacoes: str
     progresso: float
-    usuario: UsuarioDadosSemLista
     plataforma: PlataformaDadosSemLista
 
     class Config:
