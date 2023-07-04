@@ -29,17 +29,25 @@ class RepositorioPlataforma:
 
     def atualizar(self, id_plataforma: int, 
                   schema_plataforma: schemas.PlataformaCadastro):
+        if not self.obter(id_plataforma):
+            return None
+
         update_statement = (update(models.Plataforma).
                             where(models.Plataforma.id == id_plataforma).
                             values(nome=schema_plataforma.nome,
                                    fabricante=schema_plataforma.fabricante,
                                    observacoes=schema_plataforma.observacoes))
+        
         self.session.execute(update_statement)
         self.session.commit()
         return self.obter(id_plataforma)
 
     def remover(self, id_plataforma: int):
         plataforma_a_ser_excluida = self.obter(id_plataforma)
+
+        if not plataforma_a_ser_excluida:
+            return None
+        
         self.session.delete(plataforma_a_ser_excluida)
         self.session.commit()
         return {"msg": "removido"}

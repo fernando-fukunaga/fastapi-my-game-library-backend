@@ -30,6 +30,9 @@ class RepositorioJogo:
         return self.session.query(models.Jogo).filter_by(id=id_jogo).first()
 
     def atualizar(self, id_jogo: int, schema_jogo: schemas.JogoCadastro):
+        if not self.obter(id_jogo):
+            return None
+
         update_statement = update(
             models.Jogo).where(
             models.Jogo.id == id_jogo).values(
@@ -39,12 +42,17 @@ class RepositorioJogo:
             desenvolvedora=schema_jogo.desenvolvedora,
             observacoes=schema_jogo.observacoes,
             progresso=schema_jogo.progresso)
+        
         self.session.execute(update_statement)
         self.session.commit()
         return self.obter(id_jogo)
 
     def remover(self, id_jogo: int):
         jogo_a_ser_excluido = self.obter(id_jogo)
+
+        if not jogo_a_ser_excluido:
+            return None
+
         self.session.delete(jogo_a_ser_excluido)
         self.session.commit()
         return {"msg": "removido"}

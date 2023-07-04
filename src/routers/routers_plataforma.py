@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
 from src.infra.sqlalchemy.config.database import criar_sessao
@@ -25,7 +25,13 @@ async def listar_plataformas(session: Session = Depends(criar_sessao)):
             response_model=schemas.PlataformaDadosSimples)
 async def obter_plataforma(id_plataforma: int,
                            session: Session = Depends(criar_sessao)):
-    return RepositorioPlataforma(session).obter(id_plataforma)
+    plataforma = RepositorioPlataforma(session).obter(id_plataforma)
+
+    if not plataforma:
+        raise HTTPException(status_code=404, 
+                            detail="Plataforma não encontrada!")
+    
+    return plataforma
 
 
 @router.put("/plataformas/{id_plataforma}", 
@@ -33,10 +39,23 @@ async def obter_plataforma(id_plataforma: int,
 async def atualizar_plataforma(id_plataforma: int,
                                plataforma: schemas.PlataformaPut,
                                session: Session = Depends(criar_sessao)):
-    return RepositorioPlataforma(session).atualizar(id_plataforma, plataforma)
+    plataforma_a_atualizar = RepositorioPlataforma(session).atualizar(
+        id_plataforma, plataforma)
+
+    if not plataforma_a_atualizar:
+        raise HTTPException(status_code=404, 
+                            detail="Plataforma não encontrada!")
+    
+    return plataforma_a_atualizar
 
 
 @router.delete("/plataformas/{id_plataforma}")
 async def remover_plataforma(id_plataforma: int,
                              session: Session = Depends(criar_sessao)):
-    return RepositorioPlataforma(session).remover(id_plataforma)
+    plataforma = RepositorioPlataforma(session).remover(id_plataforma)
+
+    if not plataforma:
+        raise HTTPException(status_code=404, 
+                            detail="Plataforma não encontrada!")
+    
+    return plataforma

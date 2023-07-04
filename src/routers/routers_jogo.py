@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
 from src.infra.sqlalchemy.config.database import criar_sessao
@@ -21,16 +21,31 @@ async def listar_jogos(session: Session = Depends(criar_sessao)):
 
 @router.get("/jogos/{id_jogo}", response_model=schemas.JogoDadosSimples)
 async def obter_jogo(id_jogo: int, session: Session = Depends(criar_sessao)):
-    return RepositorioJogo(session).obter(id_jogo)
+    jogo = RepositorioJogo(session).obter(id_jogo)
+
+    if not jogo:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado!")
+    
+    return jogo
 
 
 @router.put("/jogos/{id_jogo}", response_model=schemas.JogoDadosSimples)
 async def atualizar_jogo(id_jogo: int,
                          jogo: schemas.JogoPut,
                          session: Session = Depends(criar_sessao)):
-    return RepositorioJogo(session).atualizar(id_jogo, jogo)
+    jogo_a_atualizar = RepositorioJogo(session).atualizar(id_jogo, jogo)
+
+    if not jogo_a_atualizar:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado!")
+    
+    return jogo_a_atualizar
 
 
 @router.delete("/jogos/{id_jogo}")
 async def remover_jogo(id_jogo: int, session: Session = Depends(criar_sessao)):
-    return RepositorioJogo(session).remover(id_jogo)
+    jogo = RepositorioJogo(session).remover(id_jogo)
+
+    if not jogo:
+        raise HTTPException(status_code=404, detail="Jogo não encontrado!")
+    
+    return jogo

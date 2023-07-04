@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import update
 from src.schemas import schemas
@@ -24,17 +23,14 @@ class RepositorioUsuario:
         return self.session.query(models.Usuario).all()
 
     def obter(self, id_usuario: int):
-        usuario_existe = self.session.query(
-            models.Usuario).filter_by(id=id_usuario).all()
+        return self.session.query(
+            models.Usuario).filter_by(id=id_usuario).first()
         
-        if not usuario_existe:
-            raise HTTPException(status_code=404, 
-                                detail="Usuario não encontrado!")
-        
-        return usuario_existe
-
     def atualizar(self, id_usuario: int,
                   schema_usuario: schemas.UsuarioCadastro):
+        if not self.obter(id_usuario):
+            return None
+
         update_statement = update(
             models.Usuario).where(
             models.Usuario.id == id_usuario).values(
@@ -42,12 +38,17 @@ class RepositorioUsuario:
             email=schema_usuario.email,
             username=schema_usuario.username,
             senha=schema_usuario.senha)
+        
         self.session.execute(update_statement)
         self.session.commit()
         return self.obter(id_usuario)
 
     def remover(self, id_usuario: int):
         usuario_a_ser_excluido = self.obter(id_usuario)
+
+        if not usuario_a_ser_excluido:
+            return None
+        
         self.session.delete(usuario_a_ser_excluido)
         self.session.commit()
         return {"msg": "removido"}

@@ -24,17 +24,33 @@ async def listar_usuarios(session: Session = Depends(criar_sessao)):
             response_model=schemas.UsuarioDadosSimples)
 async def obter_usuario(id_usuario: int,
                         session: Session = Depends(criar_sessao)):
-    return RepositorioUsuario(session).obter(id_usuario)
+    usuario = RepositorioUsuario(session).obter(id_usuario)
+
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado!")
+    
+    return usuario
 
 
 @router.put("/usuarios/{id_usuario}",
             response_model=schemas.UsuarioDadosSimples)
 async def atualizar_usuario(id_usuario: int, usuario: schemas.UsuarioCadastro,
                             session: Session = Depends(criar_sessao)):
-    return RepositorioUsuario(session).atualizar(id_usuario, usuario)
+    usuario_a_atualizar = RepositorioUsuario(session).atualizar(
+        id_usuario, usuario)
+
+    if not usuario_a_atualizar:
+        raise HTTPException(status_code=404, detail="Usuario não encontrado!")
+        
+    return usuario_a_atualizar
 
 
 @router.delete("/usuarios/{id_usuario}")
 async def remover_usuario(id_usuario: int,
                           session: Session = Depends(criar_sessao)):
-    return RepositorioUsuario(session).remover(id_usuario)
+    usuario = RepositorioUsuario(session).remover(id_usuario)
+
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado!")
+    
+    return usuario
