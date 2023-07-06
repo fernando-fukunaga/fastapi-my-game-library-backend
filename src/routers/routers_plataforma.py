@@ -5,7 +5,7 @@ from src.infra.sqlalchemy.config.database import obter_sessao
 from src.schemas import schemas
 from src.infra.sqlalchemy.repositorios.repositorio_plataforma import RepositorioPlataforma
 
-router = APIRouter()
+router = APIRouter(tags=["Plataformas"])
 
 
 @router.post("/plataformas", response_model=schemas.PlataformaDadosSimples,

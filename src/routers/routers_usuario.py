@@ -4,8 +4,11 @@ from sqlalchemy.orm import Session
 from src.schemas import schemas
 from src.infra.sqlalchemy.config.database import obter_sessao
 from src.infra.sqlalchemy.repositorios.repositorio_usuario import RepositorioUsuario
+from src.infra.sqlalchemy.models import models
+from src.infra.providers.token_provider import gerar_token
+from src.utils.auth_utils import obter_usuario_logado
 
-router = APIRouter()
+router = APIRouter(tags=["Usuarios"])
 
 
 @router.post("/usuarios", response_model=schemas.UsuarioDadosSimples,
@@ -18,13 +21,21 @@ async def cadastar_usuario(usuario: schemas.UsuarioCadastro,
 @router.post("/login", response_model=schemas.Token)
 async def login(credenciais: schemas.UsuarioLogin,
                 session: Session = Depends(obter_sessao)):
-    token = RepositorioUsuario(session).autenticar(credenciais)
+    credenciais_corretas = RepositorioUsuario(session).autenticar(credenciais)
 
-    if not token:
+    if not credenciais_corretas:
         raise HTTPException(status_code=400,
                             detail="Usuário ou senha incorretos!")
 
-    return token
+    token = gerar_token({"username": credenciais.username})
+
+    return schemas.Token(usuario=credenciais_corretas,
+                         access_token=token)
+
+
+@router.get("/me", response_model=schemas.UsuarioDadosSemLista)
+async def me(usuario: models.Usuario = Depends(obter_usuario_logado)):
+    return usuario
 
 
 @router.get("/usuarios", response_model=List[schemas.UsuarioDadosSemLista])

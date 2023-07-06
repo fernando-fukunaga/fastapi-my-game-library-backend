@@ -149,9 +149,9 @@ class JogoDadosSimples(BaseModel):
 
 
 class Token(BaseModel):
-    mensagem = "Autenticado com sucesso!"
-    username: str
-    access_token = "token"
+    usuario: UsuarioDadosSemLista
+    access_token: str
+    token_type: str = "bearer"
 
     class Config:
         orm_mode = True

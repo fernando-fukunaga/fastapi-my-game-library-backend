@@ -5,7 +5,7 @@ from src.infra.sqlalchemy.config.database import obter_sessao
 from src.infra.sqlalchemy.repositorios.repositorio_jogo import RepositorioJogo
 from src.schemas import schemas
 
-router = APIRouter()
+router = APIRouter(tags=["Jogos"])
 
 
 @router.post("/jogos", response_model=schemas.JogoDadosSimples, status_code=201)
