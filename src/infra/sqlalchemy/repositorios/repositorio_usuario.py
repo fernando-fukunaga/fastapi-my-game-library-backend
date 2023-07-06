@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import update
 from src.schemas import schemas
 from src.infra.sqlalchemy.models import models
+from src.infra.providers.hash_provider import gerar_hash, verificar_senha
 
 
 class RepositorioUsuario:
@@ -13,7 +14,7 @@ class RepositorioUsuario:
         model_usuario = models.Usuario(nome=schema_usuario.nome,
                                        email=schema_usuario.email,
                                        username=schema_usuario.username,
-                                       senha=schema_usuario.senha)
+                                       senha=gerar_hash(schema_usuario.senha))
         self.session.add(model_usuario)
         self.session.commit()
         self.session.refresh(model_usuario)
@@ -25,7 +26,11 @@ class RepositorioUsuario:
     def obter(self, id_usuario: int):
         return self.session.query(
             models.Usuario).filter_by(id=id_usuario).first()
-        
+
+    def obter_por_username(self, username: str):
+        return self.session.query(
+            models.Usuario).filter_by(username=username).first()
+
     def atualizar(self, id_usuario: int,
                   schema_usuario: schemas.UsuarioCadastro):
         if not self.obter(id_usuario):
@@ -37,8 +42,8 @@ class RepositorioUsuario:
             nome=schema_usuario.nome,
             email=schema_usuario.email,
             username=schema_usuario.username,
-            senha=schema_usuario.senha)
-        
+            senha=gerar_hash(schema_usuario.senha))
+
         self.session.execute(update_statement)
         self.session.commit()
         return self.obter(id_usuario)
@@ -48,7 +53,18 @@ class RepositorioUsuario:
 
         if not usuario_a_ser_excluido:
             return None
-        
+
         self.session.delete(usuario_a_ser_excluido)
         self.session.commit()
         return {"msg": "removido"}
+
+    def autenticar(self, credenciais: schemas.UsuarioLogin):
+        model_usuario = self.obter_por_username(credenciais.username)
+
+        if not model_usuario:
+            return None
+
+        if not verificar_senha(credenciais.senha, model_usuario.senha):
+            return None
+
+        return model_usuario

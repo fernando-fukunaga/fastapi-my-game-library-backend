@@ -15,6 +15,18 @@ async def cadastar_usuario(usuario: schemas.UsuarioCadastro,
     return RepositorioUsuario(session).criar(usuario)
 
 
+@router.post("/login", response_model=schemas.Token)
+async def login(credenciais: schemas.UsuarioLogin,
+                session: Session = Depends(obter_sessao)):
+    token = RepositorioUsuario(session).autenticar(credenciais)
+
+    if not token:
+        raise HTTPException(status_code=400,
+                            detail="Usuário ou senha incorretos!")
+
+    return token
+
+
 @router.get("/usuarios", response_model=List[schemas.UsuarioDadosSemLista])
 async def listar_usuarios(session: Session = Depends(obter_sessao)):
     return RepositorioUsuario(session).listar()

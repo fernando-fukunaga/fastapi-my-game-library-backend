@@ -14,6 +14,14 @@ class UsuarioCadastro(BaseModel):
         orm_mode = True
 
 
+class UsuarioLogin(BaseModel):
+    username: str
+    senha: str
+
+    class Config:
+        orm_mode = True
+
+
 class PlataformaCadastro(BaseModel):
     nome: str
     id_usuario: int
@@ -135,6 +143,15 @@ class JogoDadosSimples(BaseModel):
     observacoes: str
     progresso: float
     plataforma: PlataformaDadosSemLista
+
+    class Config:
+        orm_mode = True
+
+
+class Token(BaseModel):
+    mensagem = "Autenticado com sucesso!"
+    username: str
+    access_token = "token"
 
     class Config:
         orm_mode = True
