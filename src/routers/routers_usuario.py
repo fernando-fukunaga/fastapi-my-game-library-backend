@@ -3,7 +3,8 @@ from typing import List
 from sqlalchemy.orm import Session
 from src.schemas import schemas
 from src.infra.sqlalchemy.config.database import obter_sessao
-from src.infra.sqlalchemy.repositorios.repositorio_usuario import RepositorioUsuario
+from src.infra.sqlalchemy.repositorios.repositorio_usuario import \
+    RepositorioUsuario
 from src.infra.sqlalchemy.models import models
 from src.infra.providers.token_provider import gerar_token
 from src.utils.auth_utils import obter_usuario_logado

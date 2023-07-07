@@ -8,7 +8,8 @@ from src.schemas import schemas
 router = APIRouter(tags=["Jogos"])
 
 
-@router.post("/jogos", response_model=schemas.JogoDadosSimples, status_code=201)
+@router.post("/jogos", response_model=schemas.JogoDadosSimples,
+             status_code=201)
 async def cadastrar_jogo(jogo: schemas.JogoCadastro,
                          session: Session = Depends(obter_sessao)):
     return RepositorioJogo(session).criar(jogo)
