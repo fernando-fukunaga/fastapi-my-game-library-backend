@@ -27,7 +27,7 @@ class RepositorioPlataforma:
         return self.session.query(
             models.Plataforma).filter_by(id=id_plataforma).first()
 
-    def atualizar(self, id_plataforma: int, 
+    def atualizar(self, id_plataforma: int,
                   schema_plataforma: schemas.PlataformaCadastro):
         if not self.obter(id_plataforma):
             return None
@@ -37,7 +37,7 @@ class RepositorioPlataforma:
                             values(nome=schema_plataforma.nome,
                                    fabricante=schema_plataforma.fabricante,
                                    observacoes=schema_plataforma.observacoes))
-        
+
         self.session.execute(update_statement)
         self.session.commit()
         return self.obter(id_plataforma)
@@ -47,7 +47,7 @@ class RepositorioPlataforma:
 
         if not plataforma_a_ser_excluida:
             return None
-        
+
         self.session.delete(plataforma_a_ser_excluida)
         self.session.commit()
         return {"msg": "removido"}
