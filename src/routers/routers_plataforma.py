@@ -3,7 +3,8 @@ from typing import List
 from sqlalchemy.orm import Session
 from src.infra.sqlalchemy.config.database import obter_sessao
 from src.schemas import schemas
-from src.infra.sqlalchemy.repositorios.repositorio_plataforma import RepositorioPlataforma
+from src.infra.sqlalchemy.repositorios.repositorio_plataforma import \
+    RepositorioPlataforma
 
 router = APIRouter(tags=["Plataformas"])
 
