@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.routers import routers_usuario, routers_plataforma, routers_jogo
+from src.routers import routers_auth, routers_plataforma, routers_jogo
 
 
 def create_app() -> FastAPI:
     app = FastAPI()
-    app.include_router(routers_usuario.router)
+    app.include_router(routers_auth.router)
     app.include_router(routers_plataforma.router)
     app.include_router(routers_jogo.router)
 

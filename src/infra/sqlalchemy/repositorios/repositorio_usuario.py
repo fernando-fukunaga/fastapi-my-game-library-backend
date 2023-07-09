@@ -58,13 +58,13 @@ class RepositorioUsuario:
         self.session.commit()
         return {"msg": "removido"}
 
-    def autenticar(self, credenciais: schemas.UsuarioLogin):
-        model_usuario = self.obter_por_username(credenciais.username)
+    def autenticar(self, username: str, senha: str):
+        model_usuario = self.obter_por_username(username)
 
         if not model_usuario:
             return None
 
-        if not verificar_senha(credenciais.senha, model_usuario.senha):
+        if not verificar_senha(senha, model_usuario.senha):
             return None
 
         return model_usuario

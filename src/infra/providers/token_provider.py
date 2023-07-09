@@ -15,12 +15,12 @@ def gerar_token(payload: dict):
 
     copia_payload.update({"validade": expiracao_formatada})
 
-    token = jwt.encode(copia_payload, SECRET_KEY, algorithms=[ALGORITHM])
+    token = jwt.encode(copia_payload, SECRET_KEY, algorithm=ALGORITHM)
 
     return token
 
 
 def verificar_token(token: str):
-    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
 
     return payload.get("username")
