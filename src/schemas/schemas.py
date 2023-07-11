@@ -14,25 +14,7 @@ class UsuarioCadastro(BaseModel):
         orm_mode = True
 
 
-class UsuarioLogin(BaseModel):
-    username: str
-    senha: str
-
-    class Config:
-        orm_mode = True
-
-
 class PlataformaCadastro(BaseModel):
-    nome: str
-    id_usuario: int
-    fabricante: str
-    observacoes: Optional[str] = "Sem observações"
-
-    class Config:
-        orm_mode = True
-
-
-class PlataformaPut(BaseModel):
     nome: str
     fabricante: str
     observacoes: Optional[str] = "Sem observações"
@@ -68,55 +50,11 @@ class JogoPut(BaseModel):
 # ===========RESPONSES===============
 
 
-class UsuarioDadosSemLista(BaseModel):
-    id: int
-    nome: str
-    email: str
-    username: str
-
-    class Config:
-        orm_mode = True
-
-
-class PlataformaDadosSemLista(BaseModel):
-    id: int
-    nome: str
-    fabricante: str
-    observacoes: str
-
-    class Config:
-        orm_mode = True
-
-
-class JogoDadosSemLista(BaseModel):
-    id: int
-    nome: str
-    ano: int
-    categoria: str
-    observacoes: str
-    progresso: float
-
-    class Config:
-        orm_mode = True
-
-
-class PlataformaDadosParaUsuarioSimples(BaseModel):
-    id: int
-    nome: str
-    fabricante: str
-    observacoes: str
-    jogos: List[JogoDadosSemLista]
-
-    class Config:
-        orm_mode = True
-
-
 class UsuarioDadosSimples(BaseModel):
     id: int
     nome: str
     email: str
     username: str
-    plataformas: List[PlataformaDadosParaUsuarioSimples]
 
     class Config:
         orm_mode = True
@@ -127,8 +65,6 @@ class PlataformaDadosSimples(BaseModel):
     nome: str
     fabricante: str
     observacoes: str
-    usuario: UsuarioDadosSemLista
-    jogos: List[JogoDadosSemLista]
 
     class Config:
         orm_mode = True
@@ -139,17 +75,40 @@ class JogoDadosSimples(BaseModel):
     nome: str
     ano: int
     categoria: str
+    observacoes: str
+    progresso: float
+
+    class Config:
+        orm_mode = True
+
+
+class PlataformaDadosDetalhados(BaseModel):
+    id: int
+    nome: str
+    fabricante: str
+    observacoes: str
+    jogos: List[JogoDadosSimples]
+
+    class Config:
+        orm_mode = True
+
+
+class JogoDadosDetalhados(BaseModel):
+    id: int
+    nome: str
+    ano: int
+    categoria: str
     desenvolvedora: str
     observacoes: str
     progresso: float
-    plataforma: PlataformaDadosSemLista
+    plataforma: PlataformaDadosSimples
 
     class Config:
         orm_mode = True
 
 
 class Token(BaseModel):
-    usuario: UsuarioDadosSemLista
+    usuario: UsuarioDadosSimples
     access_token: str
     token_type: str = "bearer"
 

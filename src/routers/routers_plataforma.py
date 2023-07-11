@@ -3,6 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from src.infra.sqlalchemy.config.database import obter_sessao
 from src.schemas import schemas
+from src.utils.auth_utils import obter_usuario_logado
 from src.infra.sqlalchemy.repositorios.repositorio_plataforma import \
     RepositorioPlataforma
 
@@ -12,36 +13,41 @@ router = APIRouter(tags=["Plataformas"])
 @router.post("/plataformas", response_model=schemas.PlataformaDadosSimples,
              status_code=201)
 async def cadastrar_plataforma(plataforma: schemas.PlataformaCadastro,
+                               usuario_logado=Depends(obter_usuario_logado),
                                session: Session = Depends(obter_sessao)):
-    return RepositorioPlataforma(session).criar(plataforma)
+    return RepositorioPlataforma(session).criar(plataforma, usuario_logado)
 
 
 @router.get("/plataformas",
-            response_model=List[schemas.PlataformaDadosSemLista])
-async def listar_plataformas(session: Session = Depends(obter_sessao)):
-    return RepositorioPlataforma(session).listar()
+            response_model=List[schemas.PlataformaDadosSimples],)
+async def listar_plataformas(usuario_logado=Depends(obter_usuario_logado),
+                             session: Session = Depends(obter_sessao)):
+    return RepositorioPlataforma(session).listar(usuario_logado)
 
 
 @router.get("/plataformas/{id_plataforma}",
-            response_model=schemas.PlataformaDadosSimples)
+            response_model=schemas.PlataformaDadosDetalhados)
 async def obter_plataforma(id_plataforma: int,
+                           usuario_logado=Depends(obter_usuario_logado),
                            session: Session = Depends(obter_sessao)):
-    plataforma = RepositorioPlataforma(session).obter(id_plataforma)
+    return RepositorioPlataforma(session).obter(id_plataforma,
+                                                usuario_logado)
 
-    if not plataforma:
+'''    if not plataforma:
         raise HTTPException(status_code=404,
                             detail="Plataforma não encontrada!")
 
-    return plataforma
+    return plataforma'''
 
 
 @router.put("/plataformas/{id_plataforma}",
             response_model=schemas.PlataformaDadosSimples)
 async def atualizar_plataforma(id_plataforma: int,
-                               plataforma: schemas.PlataformaPut,
+                               plataforma: schemas.PlataformaCadastro,
+                               usuario_logado=Depends(obter_usuario_logado),
                                session: Session = Depends(obter_sessao)):
     plataforma_a_atualizar = RepositorioPlataforma(session).atualizar(
-        id_plataforma, plataforma)
+        id_plataforma, plataforma, usuario_logado)
 
     if not plataforma_a_atualizar:
         raise HTTPException(status_code=404,
@@ -52,8 +58,10 @@ async def atualizar_plataforma(id_plataforma: int,
 
 @router.delete("/plataformas/{id_plataforma}")
 async def remover_plataforma(id_plataforma: int,
+                             usuario_logado=Depends(obter_usuario_logado),
                              session: Session = Depends(obter_sessao)):
-    plataforma = RepositorioPlataforma(session).remover(id_plataforma)
+    plataforma = RepositorioPlataforma(session).remover(id_plataforma,
+                                                        usuario_logado)
 
     if not plataforma:
         raise HTTPException(status_code=404,

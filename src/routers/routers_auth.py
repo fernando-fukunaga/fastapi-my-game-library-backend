@@ -38,6 +38,6 @@ async def login(form_data=Depends(OAuth2PasswordRequestForm),
                          access_token=token)
 
 
-@router.get("/me", response_model=schemas.UsuarioDadosSemLista)
+@router.get("/me", response_model=schemas.UsuarioDadosSimples)
 async def me(usuario: models.Usuario = Depends(obter_usuario_logado)):
     return usuario
