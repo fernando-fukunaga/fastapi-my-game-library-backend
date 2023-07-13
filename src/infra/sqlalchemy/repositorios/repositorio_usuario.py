@@ -1,5 +1,4 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import update
 from src.schemas import schemas
 from src.infra.sqlalchemy.models import models
 from src.infra.providers.hash_provider import gerar_hash, verificar_senha

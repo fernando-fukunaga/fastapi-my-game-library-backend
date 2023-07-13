@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from typing import List
 from sqlalchemy.orm import Session
 from src.infra.sqlalchemy.config.database import obter_sessao
@@ -33,12 +33,6 @@ async def obter_plataforma(id_plataforma: int,
     return RepositorioPlataforma(session).obter(id_plataforma,
                                                 usuario_logado)
 
-'''    if not plataforma:
-        raise HTTPException(status_code=404,
-                            detail="Plataforma não encontrada!")
-
-    return plataforma'''
-
 
 @router.put("/plataformas/{id_plataforma}",
             response_model=schemas.PlataformaDadosSimples)
@@ -46,25 +40,13 @@ async def atualizar_plataforma(id_plataforma: int,
                                plataforma: schemas.PlataformaCadastro,
                                usuario_logado=Depends(obter_usuario_logado),
                                session: Session = Depends(obter_sessao)):
-    plataforma_a_atualizar = RepositorioPlataforma(session).atualizar(
-        id_plataforma, plataforma, usuario_logado)
-
-    if not plataforma_a_atualizar:
-        raise HTTPException(status_code=404,
-                            detail="Plataforma não encontrada!")
-
-    return plataforma_a_atualizar
+    return RepositorioPlataforma(session).atualizar(id_plataforma, plataforma,
+                                                    usuario_logado)
 
 
 @router.delete("/plataformas/{id_plataforma}")
 async def remover_plataforma(id_plataforma: int,
                              usuario_logado=Depends(obter_usuario_logado),
                              session: Session = Depends(obter_sessao)):
-    plataforma = RepositorioPlataforma(session).remover(id_plataforma,
-                                                        usuario_logado)
-
-    if not plataforma:
-        raise HTTPException(status_code=404,
-                            detail="Plataforma não encontrada!")
-
-    return plataforma
+    return RepositorioPlataforma(session).remover(id_plataforma,
+                                                  usuario_logado)

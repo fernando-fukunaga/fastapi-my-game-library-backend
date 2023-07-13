@@ -1,9 +1,9 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import update
 from src.infra.sqlalchemy.models import models
 from src.schemas import schemas
-from src.infra.sqlalchemy.repositorios.repositorio_plataforma import \
-    RepositorioPlataforma
+from src.errors import errors
 
 
 class RepositorioJogo:
@@ -34,7 +34,7 @@ class RepositorioJogo:
                                  progresso=schema_jogo.progresso)
 
         if not self.usuario_possui_plataforma(model_jogo, usuario_logado):
-            return None
+            raise errors.erro_400_usuario_nao_possui_plataforma
 
         self.session.add(model_jogo)
         self.session.commit()
@@ -55,15 +55,21 @@ class RepositorioJogo:
         model_jogo = (self.session.query(models.Jogo).filter_by(id=id_jogo).
                       first())
 
+        if not model_jogo:
+            raise errors.erro_404_jogo_nao_encontrado
+
         if not self.usuario_possui_plataforma(model_jogo, usuario_logado):
-            return None
+            raise errors.erro_404_jogo_nao_encontrado
 
         return model_jogo
 
-    def atualizar(self, id_jogo: int, schema_jogo: schemas.JogoCadastro,
+    def atualizar(self, id_jogo: int, schema_jogo: schemas.JogoPut,
                   usuario_logado: models.Usuario):
-        if not self.obter(id_jogo, usuario_logado):
-            return None
+        try:
+            self.obter(id_jogo, usuario_logado)
+
+        except HTTPException:
+            raise errors.erro_404_jogo_nao_encontrado
 
         update_statement = (update(models.Jogo).
                             where(models.Jogo.id == id_jogo).
@@ -79,11 +85,12 @@ class RepositorioJogo:
         return self.obter(id_jogo, usuario_logado)
 
     def remover(self, id_jogo: int, usuario_logado: models.Usuario):
-        jogo_a_ser_excluido = self.obter(id_jogo, usuario_logado)
+        try:
+            self.obter(id_jogo, usuario_logado)
 
-        if not jogo_a_ser_excluido:
-            return None
+        except HTTPException:
+            raise errors.erro_404_jogo_nao_encontrado
 
-        self.session.delete(jogo_a_ser_excluido)
+        self.session.delete(self.obter(id_jogo, usuario_logado))
         self.session.commit()
         return {"mensagem": "Jogo removido com sucesso!"}

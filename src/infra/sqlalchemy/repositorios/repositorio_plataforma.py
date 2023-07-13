@@ -1,8 +1,8 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import update, and_
 from src.schemas import schemas
 from src.infra.sqlalchemy.models import models
+from src.errors import errors
 
 
 class RepositorioPlataforma:
@@ -28,21 +28,21 @@ class RepositorioPlataforma:
                 all())
 
     def obter(self, id_plataforma: int, usuario_logado: models.Usuario):
-        consulta = (self.session.query(models.Plataforma).
-                    filter_by(id=id_plataforma, id_usuario=usuario_logado.id).
-                    first())
+        plataforma_encontrada = (self.session.query(models.Plataforma).
+                                 filter_by(id=id_plataforma,
+                                           id_usuario=usuario_logado.id).
+                                 first())
 
-        if not consulta:
-            raise HTTPException(status_code=404,
-                                detail="Plataforma não encontrada!")
+        if not plataforma_encontrada:
+            raise errors.erro_404_plataforma_nao_encontrada
 
-        return consulta
+        return plataforma_encontrada
 
     def atualizar(self, id_plataforma: int,
                   schema_plataforma: schemas.PlataformaCadastro,
                   usuario_logado: models.Usuario):
         if not self.obter(id_plataforma, usuario_logado):
-            return None
+            raise errors.erro_404_plataforma_nao_encontrada
 
         update_statement = (update(models.Plataforma).
                             where(and_(models.Plataforma.id == id_plataforma,
@@ -60,7 +60,7 @@ class RepositorioPlataforma:
         plataforma_a_ser_excluida = self.obter(id_plataforma, usuario_logado)
 
         if not plataforma_a_ser_excluida:
-            return None
+            raise errors.erro_404_plataforma_nao_encontrada
 
         self.session.delete(plataforma_a_ser_excluida)
         self.session.commit()
