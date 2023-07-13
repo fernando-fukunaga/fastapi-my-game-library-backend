@@ -11,9 +11,9 @@ def gerar_token(payload: dict):
     copia_payload = payload.copy()
 
     expiracao = datetime.utcnow() + timedelta(minutes=EXPIRES_IN_MIN)
-    expiracao_formatada = expiracao.strftime("%d/%m/%Y, %H:%M:%S")
+    # expiracao_formatada = expiracao.strftime("%d/%m/%Y, %H:%M:%S")
 
-    copia_payload.update({"validade": expiracao_formatada})
+    copia_payload.update({"exp": expiracao})
 
     token = jwt.encode(copia_payload, SECRET_KEY, algorithm=ALGORITHM)
 

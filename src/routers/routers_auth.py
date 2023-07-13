@@ -6,7 +6,6 @@ from src.infra.sqlalchemy.config.database import obter_sessao
 from src.infra.sqlalchemy.repositorios.repositorio_usuario import \
     RepositorioUsuario
 from src.infra.sqlalchemy.models import models
-from src.infra.providers.token_provider import gerar_token
 from src.utils.auth_utils import obter_usuario_logado
 
 router = APIRouter(tags=["Auth"], prefix="/auth")
@@ -19,23 +18,13 @@ async def cadastar_usuario(usuario: schemas.UsuarioCadastro,
     return RepositorioUsuario(session).criar(usuario)
 
 
-@router.post("/login", response_model=schemas.Token)
+@router.post("/login")
 async def login(form_data=Depends(OAuth2PasswordRequestForm),
                 session: Session = Depends(obter_sessao)):
     username = form_data.username
     senha = form_data.password
 
-    credenciais_corretas = RepositorioUsuario(session).autenticar(username,
-                                                                  senha)
-
-    if not credenciais_corretas:
-        raise HTTPException(status_code=400,
-                            detail="Usuário ou senha incorretos!")
-
-    token = gerar_token({"username": username})
-
-    return schemas.Token(usuario=credenciais_corretas,
-                         access_token=token)
+    return RepositorioUsuario(session).autenticar(username, senha)
 
 
 @router.get("/me", response_model=schemas.UsuarioDadosSimples)
