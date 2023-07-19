@@ -13,8 +13,8 @@ router = APIRouter(tags=["Auth"], prefix="/auth")
 
 @router.post("/signup", response_model=schemas.UsuarioDadosSimples,
              status_code=201)
-async def cadastar_usuario(usuario: schemas.UsuarioCadastro,
-                           session: Session = Depends(obter_sessao)):
+async def cadastrar_usuario(usuario: schemas.UsuarioCadastro,
+                            session: Session = Depends(obter_sessao)):
     return RepositorioUsuario(session).criar(usuario)
 
 
