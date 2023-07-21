@@ -1,22 +1,57 @@
-from src.main import create_app
-from fastapi.testclient import TestClient
-from unittest import mock
-from sqlalchemy import create_engine
+import requests
+
+prefixo = "http://localhost:8000"
 
 
-def mock_engine():
-    return create_engine("sqlite://",
-                         connect_args={"check_same_thread": False})
+class TestSignUp:
+    def test_criar_usuario_retorna_201(self):
+        response = requests.post(url=prefixo+"/auth/signup",
+                                 json={"nome": "John Doe",
+                                       "email": "john.doe@email.com",
+                                       "username": "john.doe",
+                                       "senha": "senha"})
+
+        assert response.status_code == 201
+
+    def test_criar_usuario_com_mesmo_email_retorna_400(self):
+        response = requests.post(url=prefixo+"/auth/signup",
+                                 json={"nome": "John Doe",
+                                       "email": "john.doe@email.com",
+                                       "username": "john.doe",
+                                       "senha": "senha"})
+
+        assert response.status_code == 400
+
+    def test_criar_usuario_com_mesmo_username_retorna_400(self):
+        response = requests.post(url=prefixo+"/auth/signup",
+                                 json={"nome": "John Doe",
+                                       "email": "john.doe1@email.com",
+                                       "username": "john.doe",
+                                       "senha": "senha"})
+
+        assert response.status_code == 400
+
+    def test_criar_usuario_com_username_maior_que_14_chars_retorna_400(self):
+        response = requests.post(url=prefixo+"/auth/signup",
+                                 json={"nome": "John Doe",
+                                       "email": "john.doe1@email.com",
+                                       "username": "john.doe1111111",
+                                       "senha": "senha"})
+
+        assert response.status_code == 400
 
 
-@mock.patch("src.infra.sqlalchemy.config.database.engine",
-            mock_engine)
-def test_criar_usuario_retorna_200():
-    client = TestClient(create_app())
-    response = client.post(url="/auth/signup",
-                           json={"nome": "Felipe",
-                                 "email": "felipe1@email",
-                                 "username": "felipe1",
-                                 "senha": "senha"})
+class TestLogin:
+    def test_tentar_login_com_usuario_existente_retorna_200(self):
+        response = requests.post(url=prefixo+"/auth/login",
+                                 json={"username": "john.doe",
+                                       "senha": "senha"})
 
-    assert response.status_code == 201
+        assert response.status_code == 200
+
+    def test_tentar_login_com_usuario_inexistente_retorna_400(self):
+        response = requests.post(url=prefixo+"/auth/login",
+                                 data={"username": "john.doe1",
+                                       "password": "senha"})
+
+        assert response.status_code == 400
