@@ -45,7 +45,7 @@ class TestLogin:
     def test_tentar_login_com_usuario_existente_retorna_200(self):
         response = requests.post(url=prefixo+"/auth/login",
                                  data={"username": "john.doe",
-                                       "senha": "senha"})
+                                       "password": "senha"})
 
         assert response.status_code == 200
 
