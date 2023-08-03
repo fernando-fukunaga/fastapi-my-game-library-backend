@@ -1,57 +1,59 @@
-import requests
+from fastapi.testclient import TestClient
+from src.main import app
+from tests.gerador_numeros import gera_numero
 
-prefixo = "http://localhost:8000"
+client = TestClient(app)
 
 
 class TestSignUp:
     def test_criar_usuario_retorna_201(self):
-        response = requests.post(url=prefixo+"/auth/signup",
-                                 json={"nome": "John Doe",
-                                       "email": "john.doe@email.com",
-                                       "username": "john.doe",
-                                       "senha": "senha"})
+        response = client.post(url="/auth/signup",
+                               json={"nome": "Test Dummy",
+                                     "email": f"test{gera_numero()}@email.com",
+                                     "username": f"test{gera_numero()}",
+                                     "senha": "senha"})
 
         assert response.status_code == 201
 
-    def test_criar_usuario_com_mesmo_email_retorna_400(self):
-        response = requests.post(url=prefixo+"/auth/signup",
-                                 json={"nome": "John Doe",
-                                       "email": "john.doe@email.com",
-                                       "username": "john.doe",
-                                       "senha": "senha"})
+    def test_criar_usuario_com_email_existente_retorna_400(self):
+        response = client.post(url="/auth/signup",
+                               json={"nome": "Test Dummy",
+                                     "email": "fernando@email.com",
+                                     "username": f"test{gera_numero()}",
+                                     "senha": "senha"})
 
         assert response.status_code == 400
 
-    def test_criar_usuario_com_mesmo_username_retorna_400(self):
-        response = requests.post(url=prefixo+"/auth/signup",
-                                 json={"nome": "John Doe",
-                                       "email": "john.doe1@email.com",
-                                       "username": "john.doe",
-                                       "senha": "senha"})
+    def test_criar_usuario_com_username_existente_retorna_400(self):
+        response = client.post(url="/auth/signup",
+                               json={"nome": "Test Dummy",
+                                     "email": f"test{gera_numero()}@email.com",
+                                     "username": "fernando",
+                                     "senha": "senha"})
 
         assert response.status_code == 400
 
     def test_criar_usuario_com_username_maior_que_14_chars_retorna_400(self):
-        response = requests.post(url=prefixo+"/auth/signup",
-                                 json={"nome": "John Doe",
-                                       "email": "john.doe1@email.com",
-                                       "username": "john.doe1111111",
-                                       "senha": "senha"})
+        response = client.post(url="/auth/signup",
+                               json={"nome": "Test Dummy",
+                                     "email": f"test{gera_numero()}@email.com",
+                                     "username": "test11111111111",
+                                     "senha": "senha"})
 
         assert response.status_code == 400
 
 
 class TestLogin:
     def test_tentar_login_com_usuario_existente_retorna_200(self):
-        response = requests.post(url=prefixo+"/auth/login",
-                                 data={"username": "john.doe",
-                                       "password": "senha"})
+        response = client.post(url="/auth/login",
+                               data={"username": "fernando",
+                                     "password": "senha"})
 
         assert response.status_code == 200
 
     def test_tentar_login_com_usuario_inexistente_retorna_400(self):
-        response = requests.post(url=prefixo+"/auth/login",
-                                 data={"username": "john.doe1",
-                                       "password": "senha"})
+        response = client.post(url="/auth/login",
+                               data={"username": "usuario_inexistente",
+                                     "password": "senha"})
 
         assert response.status_code == 400
