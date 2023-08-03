@@ -9,6 +9,7 @@ client = TestClient(app)
 
 # Token fixo para o usuário fernando, sem expiração, para testes:
 TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZlcm5hbmRvIiwidmFsaWRhZGUiOiIxMy8wNy8yMDIzLCAxOTo0OToxOSJ9.ozwDM63scHmWLy5mXpADw7NVdSjF1nvUVVJRahTDH3w"
+headers = {"Authorization": f"Bearer {TOKEN}"}
 
 
 class TestPlataforma:
@@ -17,18 +18,50 @@ class TestPlataforma:
         response = client.post(url="/plataformas",
                                json={"nome": "Test",
                                      "fabricante": "Test"},
-                               headers={"Authorization": f"Bearer {TOKEN}"})
+                               headers=headers)
 
         assert response.status_code == 201
 
     def test_listar_plataformas_retorna_200(self):
         response = client.get(url="/plataformas",
-                               headers={"Authorization": f"Bearer {TOKEN}"})
+                              headers=headers)
 
         assert response.status_code == 200
 
-    def test_obter_plataforma_retorna_200(self):
+    def test_obter_plataforma_existente_retorna_200(self):
         response = client.get(url="/plataformas/1",
-                               headers={"Authorization": f"Bearer {TOKEN}"})
+                              headers=headers)
 
         assert response.status_code == 200
+
+    def test_obter_plataforma_inexistente_retorna_404(self):
+        response = client.get(url="/plataformas/0",
+                              headers=headers)
+
+        assert response.status_code == 404
+
+    def test_obter_plataforma_com_string_retorna_422(self):
+        response = client.get(url="/plataformas/a",
+                              headers=headers)
+
+        assert response.status_code == 422
+
+    def test_atualizar_plataforma_corretamente_retorna_200(self):
+        response = client.put(url="/plataformas/2",
+                              headers=headers,
+                              json={"nome": "Test",
+                                    "fabricante": "Test"})
+
+        assert response.status_code == 200
+
+    def test_atualizar_plataforma_inexistente_retorna_404(self):
+        response = client.put(url="/plataformas/0",
+                              headers=headers)
+
+        assert response.status_code == 404
+
+    def test_atualizar_plataforma_com_string_retorna_422(self):
+        response = client.put(url="/plataformas/a",
+                              headers=headers)
+
+        assert response.status_code == 422

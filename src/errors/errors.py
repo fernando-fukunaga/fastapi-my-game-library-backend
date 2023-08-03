@@ -12,8 +12,8 @@ def erro_400(mensagem: str) -> HTTPException:
 
 
 def erro_401(mensagem: str) -> HTTPException:
-    return HTTPException(status_code=400, detail=mensagem)
+    return HTTPException(status_code=401, detail=mensagem)
 
 
 def erro_404(mensagem: str) -> HTTPException:
-    return HTTPException(status_code=400, detail=mensagem)
+    return HTTPException(status_code=404, detail=mensagem)

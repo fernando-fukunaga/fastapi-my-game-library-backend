@@ -45,15 +45,17 @@ class RepositorioPlataforma:
                                  first())
 
         if not plataforma_encontrada:
-            raise errors.erro_404_plataforma_nao_encontrada
+            raise errors.erro_404("Plataforma não encontrada!")
 
         return plataforma_encontrada
 
     def atualizar(self, id_plataforma: int,
                   schema_plataforma: schemas.PlataformaCadastro,
                   usuario_logado: models.Usuario):
-        if not self.obter(id_plataforma, usuario_logado):
-            raise errors.erro_404_plataforma_nao_encontrada
+        try:
+            self.obter(id_plataforma, usuario_logado)
+        except:
+            raise errors.erro_404("Plataforma não encontrada!")
 
         update_statement = (update(models.Plataforma).
                             where(and_(models.Plataforma.id == id_plataforma,
@@ -71,7 +73,7 @@ class RepositorioPlataforma:
         plataforma_a_ser_excluida = self.obter(id_plataforma, usuario_logado)
 
         if not plataforma_a_ser_excluida:
-            raise errors.erro_404_plataforma_nao_encontrada
+            raise errors.erro_404("Plataforma não encontrada!")
 
         self.session.delete(plataforma_a_ser_excluida)
         self.session.commit()

@@ -45,7 +45,7 @@ class RepositorioJogo:
                                  progresso=schema_jogo.progresso)
 
         if not self.usuario_possui_plataforma(model_jogo, usuario_logado):
-            raise errors.erro_400_usuario_nao_possui_plataforma
+            raise errors.erro_400("Usuário não possui essa plataforma!")
 
         self.session.add(model_jogo)
         self.session.commit()
@@ -67,10 +67,10 @@ class RepositorioJogo:
                       first())
 
         if not model_jogo:
-            raise errors.erro_404_jogo_nao_encontrado
+            raise errors.erro_404("Jogo não encontrado!")
 
         if not self.usuario_possui_plataforma(model_jogo, usuario_logado):
-            raise errors.erro_404_jogo_nao_encontrado
+            raise errors.erro_404("Jogo não encontrado!")
 
         return model_jogo
 
@@ -80,7 +80,7 @@ class RepositorioJogo:
             self.obter(id_jogo, usuario_logado)
 
         except HTTPException:
-            raise errors.erro_404_jogo_nao_encontrado
+            raise errors.erro_404("Jogo não encontrado!")
 
         update_statement = (update(models.Jogo).
                             where(models.Jogo.id == id_jogo).
@@ -100,7 +100,7 @@ class RepositorioJogo:
             self.obter(id_jogo, usuario_logado)
 
         except HTTPException:
-            raise errors.erro_404_jogo_nao_encontrado
+            raise errors.erro_404("Jogo não encontrado!")
 
         self.session.delete(self.obter(id_jogo, usuario_logado))
         self.session.commit()
