@@ -1,3 +1,4 @@
+# Rotas relacionadas aos jogos:
 from fastapi import APIRouter, Depends
 from typing import List
 from sqlalchemy.orm import Session
@@ -6,6 +7,7 @@ from src.infra.sqlalchemy.repositorios.repositorio_jogo import RepositorioJogo
 from src.utils.auth_utils import obter_usuario_logado
 from src.schemas import schemas
 
+# Criando router para endpoints de autenticação, para melhorar o Swagger:
 router = APIRouter(tags=["Jogos"])
 
 

@@ -1,3 +1,4 @@
+# Rotas relacionadas à autenticação e autorização:
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -8,6 +9,8 @@ from src.infra.sqlalchemy.repositorios.repositorio_usuario import \
 from src.infra.sqlalchemy.models import models
 from src.utils.auth_utils import obter_usuario_logado
 
+"""Criando router para endpoints de autenticação,
+para melhorar o Swagger, com prefixo /auth:"""
 router = APIRouter(tags=["Auth"], prefix="/auth")
 
 

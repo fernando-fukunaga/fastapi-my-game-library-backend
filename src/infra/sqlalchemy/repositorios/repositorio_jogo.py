@@ -1,3 +1,4 @@
+# Módulo para interações com a tabela de jogos do banco
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import update
@@ -7,8 +8,18 @@ from src.errors import errors
 
 
 class RepositorioJogo:
+    """Classe de interações com o banco de dados.
 
-    def __init__(self, session: Session):
+    Exemplo de instânciação:
+
+    repositorio = RepositorioJogo(session)
+
+    Attributes:
+        session (Session): sessão do SQLAlchemy para escrita e leitura
+        no nosso banco.
+    """
+
+    def __init__(self, session: Session) -> None:
         self.session = session
 
     def usuario_possui_plataforma(self, jogo: models.Jogo,

@@ -1,3 +1,4 @@
+# Schemas, modelos para input e output, views da API
 from pydantic import BaseModel
 from typing import List, Optional
 

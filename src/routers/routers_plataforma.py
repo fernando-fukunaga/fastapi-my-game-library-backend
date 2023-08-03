@@ -1,3 +1,4 @@
+# Rotas relacionadas às plataformas:
 from fastapi import APIRouter, Depends
 from typing import List
 from sqlalchemy.orm import Session
@@ -7,6 +8,7 @@ from src.utils.auth_utils import obter_usuario_logado
 from src.infra.sqlalchemy.repositorios.repositorio_plataforma import \
     RepositorioPlataforma
 
+# Criando router para endpoints de autenticação, para melhorar o Swagger:
 router = APIRouter(tags=["Plataformas"])
 
 

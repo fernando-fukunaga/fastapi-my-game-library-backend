@@ -1,3 +1,4 @@
+# Módulo para interações com a tabela de plataformas do banco
 from sqlalchemy.orm import Session
 from sqlalchemy import update, and_
 from src.schemas import schemas
@@ -6,8 +7,18 @@ from src.errors import errors
 
 
 class RepositorioPlataforma:
+    """Classe de interações com o banco de dados.
 
-    def __init__(self, session: Session):
+    Exemplo de instânciação:
+
+    repositorio = RepositorioPlataforma(session)
+
+    Attributes:
+        session (Session): sessão do SQLAlchemy para escrita e leitura
+        no nosso banco.
+    """
+
+    def __init__(self, session: Session) -> None:
         self.session = session
 
     def criar(self, schema_plataforma: schemas.PlataformaCadastro,
