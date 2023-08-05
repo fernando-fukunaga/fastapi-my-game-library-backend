@@ -56,12 +56,16 @@ class TestPlataforma:
 
     def test_atualizar_plataforma_inexistente_retorna_404(self):
         response = client.put(url="/plataformas/0",
-                              headers=headers)
+                              headers=headers,
+                              json={"nome": "Test",
+                                    "fabricante": "Test"})
 
         assert response.status_code == 404
 
     def test_atualizar_plataforma_com_string_retorna_422(self):
         response = client.put(url="/plataformas/a",
-                              headers=headers)
+                              headers=headers,
+                              json={"nome": "Test",
+                                    "fabricante": "Test"})
 
         assert response.status_code == 422
