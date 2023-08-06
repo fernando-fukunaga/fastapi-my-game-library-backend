@@ -69,3 +69,21 @@ class TestPlataforma:
                                     "fabricante": "Test"})
 
         assert response.status_code == 422
+
+    def test_deletar_plataforma_corretamente_retorna_200(self):
+        response = client.delete(url="/plataformas/2",
+                                 headers=headers)
+
+        assert response.status_code == 200
+
+    def test_deletar_plataforma_inexistente_retorna_404(self):
+        response = client.delete(url="/plataformas/0",
+                                 headers=headers)
+
+        assert response.status_code == 404
+
+    def test_deletar_plataforma_com_string_retorna_422(self):
+        response = client.delete(url="/plataformas/a",
+                                 headers=headers)
+
+        assert response.status_code == 422
