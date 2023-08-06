@@ -1,0 +1,631 @@
+openapi: 3.0.2
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Cadastrar Usuario
+      operationId: cadastrar_usuario_auth_signup_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioCadastro'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioDadosSimples'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      operationId: login_auth_login_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_login_auth_login_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /auth/me:
+    get:
+      tags:
+        - Auth
+      summary: Me
+      operationId: me_auth_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioDadosSimples'
+      security:
+        - OAuth2PasswordBearer: []
+  /plataformas:
+    get:
+      tags:
+        - Plataformas
+      summary: Listar Plataformas
+      operationId: listar_plataformas_plataformas_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Listar Plataformas Plataformas Get
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlataformaDadosSimples'
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - Plataformas
+      summary: Cadastrar Plataforma
+      operationId: cadastrar_plataforma_plataformas_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlataformaCadastro'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlataformaDadosSimples'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /plataformas/{id_plataforma}:
+    get:
+      tags:
+        - Plataformas
+      summary: Obter Plataforma
+      operationId: obter_plataforma_plataformas__id_plataforma__get
+      parameters:
+        - required: true
+          schema:
+            title: Id Plataforma
+            type: integer
+          name: id_plataforma
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlataformaDadosDetalhados'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+    put:
+      tags:
+        - Plataformas
+      summary: Atualizar Plataforma
+      operationId: atualizar_plataforma_plataformas__id_plataforma__put
+      parameters:
+        - required: true
+          schema:
+            title: Id Plataforma
+            type: integer
+          name: id_plataforma
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlataformaCadastro'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlataformaDadosSimples'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+    delete:
+      tags:
+        - Plataformas
+      summary: Remover Plataforma
+      operationId: remover_plataforma_plataformas__id_plataforma__delete
+      parameters:
+        - required: true
+          schema:
+            title: Id Plataforma
+            type: integer
+          name: id_plataforma
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /jogos:
+    get:
+      tags:
+        - Jogos
+      summary: Listar Jogos
+      operationId: listar_jogos_jogos_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Listar Jogos Jogos Get
+                type: array
+                items:
+                  $ref: '#/components/schemas/JogoDadosSimples'
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - Jogos
+      summary: Cadastrar Jogo
+      operationId: cadastrar_jogo_jogos_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JogoCadastro'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JogoDadosDetalhados'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /jogos/{id_jogo}:
+    get:
+      tags:
+        - Jogos
+      summary: Obter Jogo
+      operationId: obter_jogo_jogos__id_jogo__get
+      parameters:
+        - required: true
+          schema:
+            title: Id Jogo
+            type: integer
+          name: id_jogo
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JogoDadosDetalhados'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+    put:
+      tags:
+        - Jogos
+      summary: Atualizar Jogo
+      operationId: atualizar_jogo_jogos__id_jogo__put
+      parameters:
+        - required: true
+          schema:
+            title: Id Jogo
+            type: integer
+          name: id_jogo
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JogoPut'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JogoDadosSimples'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+    delete:
+      tags:
+        - Jogos
+      summary: Remover Jogo
+      operationId: remover_jogo_jogos__id_jogo__delete
+      parameters:
+        - required: true
+          schema:
+            title: Id Jogo
+            type: integer
+          name: id_jogo
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+components:
+  schemas:
+    Body_login_auth_login_post:
+      title: Body_login_auth_login_post
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        grant_type:
+          title: Grant Type
+          pattern: password
+          type: string
+        username:
+          title: Username
+          type: string
+        password:
+          title: Password
+          type: string
+        scope:
+          title: Scope
+          type: string
+          default: ''
+        client_id:
+          title: Client Id
+          type: string
+        client_secret:
+          title: Client Secret
+          type: string
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    JogoCadastro:
+      title: JogoCadastro
+      required:
+        - nome
+        - id_plataforma
+        - ano
+        - categoria
+        - desenvolvedora
+        - progresso
+      type: object
+      properties:
+        nome:
+          title: Nome
+          type: string
+        id_plataforma:
+          title: Id Plataforma
+          type: integer
+        ano:
+          title: Ano
+          type: integer
+        categoria:
+          title: Categoria
+          type: string
+        desenvolvedora:
+          title: Desenvolvedora
+          type: string
+        observacoes:
+          title: Observacoes
+          type: string
+          default: Sem observações
+        progresso:
+          title: Progresso
+          type: number
+    JogoDadosDetalhados:
+      title: JogoDadosDetalhados
+      required:
+        - id
+        - nome
+        - ano
+        - categoria
+        - desenvolvedora
+        - observacoes
+        - progresso
+        - plataforma
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+        nome:
+          title: Nome
+          type: string
+        ano:
+          title: Ano
+          type: integer
+        categoria:
+          title: Categoria
+          type: string
+        desenvolvedora:
+          title: Desenvolvedora
+          type: string
+        observacoes:
+          title: Observacoes
+          type: string
+        progresso:
+          title: Progresso
+          type: number
+        plataforma:
+          $ref: '#/components/schemas/PlataformaDadosSimples'
+    JogoDadosSimples:
+      title: JogoDadosSimples
+      required:
+        - id
+        - nome
+        - ano
+        - categoria
+        - observacoes
+        - progresso
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+        nome:
+          title: Nome
+          type: string
+        ano:
+          title: Ano
+          type: integer
+        categoria:
+          title: Categoria
+          type: string
+        observacoes:
+          title: Observacoes
+          type: string
+        progresso:
+          title: Progresso
+          type: number
+    JogoPut:
+      title: JogoPut
+      required:
+        - nome
+        - ano
+        - categoria
+        - desenvolvedora
+        - progresso
+      type: object
+      properties:
+        nome:
+          title: Nome
+          type: string
+        ano:
+          title: Ano
+          type: integer
+        categoria:
+          title: Categoria
+          type: string
+        desenvolvedora:
+          title: Desenvolvedora
+          type: string
+        observacoes:
+          title: Observacoes
+          type: string
+          default: Sem observações
+        progresso:
+          title: Progresso
+          type: number
+    PlataformaCadastro:
+      title: PlataformaCadastro
+      required:
+        - nome
+        - fabricante
+      type: object
+      properties:
+        nome:
+          title: Nome
+          type: string
+        fabricante:
+          title: Fabricante
+          type: string
+        observacoes:
+          title: Observacoes
+          type: string
+          default: Sem observações
+    PlataformaDadosDetalhados:
+      title: PlataformaDadosDetalhados
+      required:
+        - id
+        - nome
+        - fabricante
+        - observacoes
+        - jogos
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+        nome:
+          title: Nome
+          type: string
+        fabricante:
+          title: Fabricante
+          type: string
+        observacoes:
+          title: Observacoes
+          type: string
+        jogos:
+          title: Jogos
+          type: array
+          items:
+            $ref: '#/components/schemas/JogoDadosSimples'
+    PlataformaDadosSimples:
+      title: PlataformaDadosSimples
+      required:
+        - id
+        - nome
+        - fabricante
+        - observacoes
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+        nome:
+          title: Nome
+          type: string
+        fabricante:
+          title: Fabricante
+          type: string
+        observacoes:
+          title: Observacoes
+          type: string
+    UsuarioCadastro:
+      title: UsuarioCadastro
+      required:
+        - nome
+        - email
+        - username
+        - senha
+      type: object
+      properties:
+        nome:
+          title: Nome
+          type: string
+        email:
+          title: Email
+          type: string
+        username:
+          title: Username
+          type: string
+        senha:
+          title: Senha
+          type: string
+    UsuarioDadosSimples:
+      title: UsuarioDadosSimples
+      required:
+        - id
+        - nome
+        - email
+        - username
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+        nome:
+          title: Nome
+          type: string
+        email:
+          title: Email
+          type: string
+        username:
+          title: Username
+          type: string
+    ValidationError:
+      title: ValidationError
+      required:
+        - loc
+        - msg
+        - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: /auth/login
