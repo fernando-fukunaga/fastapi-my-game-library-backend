@@ -40,6 +40,31 @@ Segui o máximo possível as recomendações da PEP8 para a escrita do código, 
 
 Escrevi docstrings nos módulos, classes e funções sempre que necessário, além de comentários isolados, tudo para ajudar a entender melhor o que o código está fazendo.
 
+## 💻 Como rodar o projeto na minha máquina?
+Para rodar o MyGameLibrary em sua máquina, você precisa das seguintes ferramentas:
+* Python 3.11.x instalado na máquina;
+* Um terminal PowerShell;
+* Um navegador web ou programas de teste de API como Postman ou Insomnia.
+
+Agora é só seguir os passos abaixo:
+### 1. Baixar o clonar o projeto em sua máquina
+Você pode fazer o download do .zip do projeto ou usar o git clone para clonar em sua máquina (assim pode até sugerir contribuições).
+
+### 2. Instalar os pacotes necessários
+No terminal, preferencialmente PowerShell, execute o comando abaixo para instalar os pacotes necessários:
+```powershell
+pip install -r requirements.txt
+```
+
+### 3. Subir o servidor
+Execute o comando abaixo, no diretório raíz do projeto, para subir o servidor uvicorn com a aplicação:
+```powershell
+uvicorn src.main:app
+```
+
+### 4. Checar o Swagger
+Após subir a aplicação no localhost, acesse o Swagger pela url http:localhost:*porta*/docs. Pelo Swagger você poderá conferir todos os endpoints da aplicação e já testar por lá mesmo. Faça o seu cadastro e divirta-se!
+
 ### Responsável pelo projeto:
 | [<img src="https://avatars.githubusercontent.com/u/112123011?s=400&u=22ad423853238139b7091769db66445e54a7e678&v=4" width=115><br><sub>Fernando Fukunaga</sub>](https://github.com/fernando-fukunaga) |
 | :---: |
