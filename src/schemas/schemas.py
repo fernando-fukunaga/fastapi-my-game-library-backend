@@ -109,7 +109,7 @@ class JogoDadosDetalhados(BaseModel):
 
 
 class Token(BaseModel):
-    usuario: UsuarioDadosSimples
+    usuario: str
     access_token: str
     token_type: str = "bearer"
 

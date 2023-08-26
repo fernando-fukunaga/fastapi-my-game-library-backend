@@ -157,4 +157,4 @@ class RepositorioUsuario:
 
         token = gerar_token({"username": username})
 
-        return schemas.Token(usuario=model_usuario, access_token=token)
+        return schemas.Token(usuario=username, access_token=token)
