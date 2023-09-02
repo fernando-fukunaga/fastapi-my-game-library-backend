@@ -6,7 +6,7 @@ e configura middlewares para receber requisições de qualquer origem.
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.routers import routers_auth, routers_plataforma, routers_jogo
+from src.routers import routers_auth, routers_plataforma, routers_jogo, router_home
 from src.infra.sqlalchemy.config.database import criar_banco_de_dados
 
 
@@ -26,6 +26,7 @@ def create_app() -> FastAPI:
     app.include_router(routers_auth.router)
     app.include_router(routers_plataforma.router)
     app.include_router(routers_jogo.router)
+    app.include_router(router_home.router)
 
     criar_banco_de_dados()
 
@@ -35,7 +36,7 @@ def create_app() -> FastAPI:
 app = create_app()
 
 # Configuração de middlewares:
-origins = ["http://localhost:8000"]
+origins = ["*"]
 
 app.add_middleware(CORSMiddleware,
                    allow_origins=origins,

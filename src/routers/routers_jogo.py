@@ -7,7 +7,7 @@ from src.infra.sqlalchemy.repositorios.repositorio_jogo import RepositorioJogo
 from src.utils.auth_utils import obter_usuario_logado
 from src.schemas import schemas
 
-# Criando router para endpoints de autenticação, para melhorar o Swagger:
+# Criando router para endpoints de jogos, para melhorar o Swagger:
 router = APIRouter(tags=["Jogos"])
 
 

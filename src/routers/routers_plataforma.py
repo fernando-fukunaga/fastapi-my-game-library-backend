@@ -8,7 +8,7 @@ from src.utils.auth_utils import obter_usuario_logado
 from src.infra.sqlalchemy.repositorios.repositorio_plataforma import \
     RepositorioPlataforma
 
-# Criando router para endpoints de autenticação, para melhorar o Swagger:
+# Criando router para endpoints de plataformas, para melhorar o Swagger:
 router = APIRouter(tags=["Plataformas"])
 
 
