@@ -65,6 +65,9 @@ uvicorn src.main:app
 ### 4. Checar o Swagger
 Após subir a aplicação no localhost, acesse o Swagger pela url http:localhost:*porta*/docs. Pelo Swagger você poderá conferir todos os endpoints da aplicação e já testar por lá mesmo. Faça o seu cadastro e divirta-se!
 
+## 🚀 Deploy
+A versão beta ainda não será deployada na web, pois ainda estou estudando e aprendendo conteinerização com Docker e procurando o melhor serviço de hospedagem para mim. Nas próximas versões, será possível testar minha API diretamente do seu navegador ou utilizando ferramentas famosas como o Postman.
+
 ### Responsável pelo projeto:
 | [<img src="https://avatars.githubusercontent.com/u/112123011?s=400&u=22ad423853238139b7091769db66445e54a7e678&v=4" width=115><br><sub>Fernando Fukunaga</sub>](https://github.com/fernando-fukunaga) |
 | :---: |
