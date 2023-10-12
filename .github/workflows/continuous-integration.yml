@@ -24,9 +24,6 @@ jobs:
       run: |
         pytest
 
-    - name: Update current version
-      uses: fernandofukunaga/my-game-library-backend/update-version@v1
-
     - name: Build Docker image
       run: |
         docker build -t fernandofukunaga/my-game-library-backend@${{ env.CURRENT_VERSION }} .
