@@ -24,9 +24,8 @@ jobs:
       run: |
         pytest
 
-    - name: Set variable for the image tag
       env:
-        DOCKER_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/my-game-library-backend:${{ vars.CURRENT_VERSION }}       
+        DOCKER_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/my-game-library-backend:${{ vars.CURRENT_VERSION }}          
 
     - name: Build Docker image
       run: |
