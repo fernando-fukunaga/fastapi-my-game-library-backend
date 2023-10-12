@@ -9,4 +9,4 @@ jobs:
 
     steps:
     - name: Exibir o valor da variável de ambiente
-      run: echo ${{ env.CURRENT_VERSION }}
+      run: echo ${{ prd.CURRENT_VERSION }}
