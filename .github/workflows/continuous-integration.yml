@@ -3,6 +3,9 @@ name: Continuous integration
 on:
   workflow_dispatch:
 
+env:
+  DOCKER_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/my-game-library-backend:${{ vars.CURRENT_VERSION }}
+
 jobs:
 
   CI:
@@ -22,10 +25,7 @@ jobs:
 
     - name: Test with pytest
       run: |
-        pytest
-
-      env:
-        DOCKER_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/my-game-library-backend:${{ vars.CURRENT_VERSION }}          
+        pytest         
 
     - name: Build Docker image
       run: |
