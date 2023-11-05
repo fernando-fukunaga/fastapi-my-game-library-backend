@@ -1,47 +1,33 @@
 <div align="center">
   <img src="docs/images/mgl-logo.jpg" alt="" width=320>
-  <p><strong>MyGameLibrary: Uma API para gerenciar os seus videogames!!</strong></p>
+  <p><strong>MyGameLibrary: An API to manage yout video games!</strong></p>
 
   ![Static Badge](https://img.shields.io/badge/Status-Vers%C3%A3o%20beta%20dispon%C3%ADvel-green)
 </div>
 
-O MyGameLibrary é uma API REST, desenvolvida por mim, em Python, usando o framework FastAPI.
+MyGameLibrary is a REST API, developed by me, in Python, using the web framework FastAPI.
 
-Atualmente, ela está em sua versão beta, versões mais aprimoradas estão por vir. Eu criei esse projeto com propósitos de estudo, para aprender na prática os conceitos do desenvolvimento de API's e também do framework. Portanto, o projeto ficará aberto para issues e pull requests, mas eu sempre analisarei se as mudanças sugeridas terão sentido para a minha trilha de aprendizado atual, pois quero sempre entender exatamente o que acontece em cada linha do código e, conceitos muito avancados podem me atrapalhar com isso.
+It's currently in beta version, more improved versions are on their way. I've created this project with studying purposes, to learn backend development concepts and stuff. Therefore, the repository is open for issues and pull requests, but, I'm always going to review them and see if they make sense in my learning path. Because I like to always know what every line of code is doing and, concepts that are too advanced may be an obstacle in the process.
 
-## 🤔 O que essa API faz?
-No MyGameLibrary, os usuários devem realizar o seu cadastro, e depois o login. O sistema de autenticação se dá por oauth2, o endpoint de login irá retornar um access token, o qual o usuário deve passar em todas as próximas requisições, no header Authorization, com a string "Bearer " antes. Caso o consumo seja feito pelo openapi (swagger), não é necessário se preocupar com isso, apenas faça o login clicando no botão "Authenticate".
+## 🤔 How does the application work?
+On MyGameLibrary, the users have to sign up, and then sign in to the API. The authentication system is made via OAuth2, the login endpoint will be returning an access token, which the user has to pass in the Authorization header of every subsequent request, with the string "Bearer " as a prefix. The header value will look like this: "Bearer \<access_token\>". If you're consuming the API via Swagger UI (available in the "/docs" endpoint), you don't need to worry about that part, just click in the "Authenticate" button and input your credentials.
 
-Lembrando que o MyGameLibrary pode funcionar como uma espécie de BFF, ou seja, sinta-se livre para desenvolver um frontend para consumi-lo 😊.
+After registering and singing in, the user can register all the platforms where they play video games, it can be a Playstation, a Nintendo, a computer, anything. Every registered platform will have an ID number that points to the logged in user. And than the user can register the specific games of each platform, inputting data like the name, the year, the category, and the most important thing, the progress.
 
-Após cadastro e login, o usuário pode cadastrar todas as plataformas onde ele joga videogames, pode ser um Playstaion 5, um Nintendo Switch, um PC, o que for! Cada plataforma terá um número de id e será atrelada ao usuário logado. E então, o usuário pode cadastrar os jogos de cada plataforma, colocando informações básicas como nome do jogo, ano, categoria e o mais importante para essa API: o progresso.
+That's because the intention is to offer to the user a game management platform, where they can get a good view of all of their games, how many of them are finished, how many are incomplete, how many are not even started, etc. And then the user can organize themselves, decide in what order they want to finish their games, keep track of the progress, and things like that.
 
-Isso porque a intenção dessa API é oferecer ao usuário uma plataforma de gerenciamento de seus jogos, para que ele possa ter uma visão macro de todos os jogos que tem (ou todos que ele queira controlar, o uso é livre!), assim, ele pode se organizar, definir a ordem com a qual ele quer zerar os jogos, e registrar o seu progresso.
+Just a reminder that, MyGameLibrary can work as a BFF (backend for frontend), so feel free to create a frontend application to consume it 😊.
 
-Portanto, é evidente que essa aplicação tem como alvo os jogos de modo campanha, visto que não é possível mensurar o progesso em porcentagem do seu CS (hehe), mas não significa que você não possa registrá-lo, a aplicação foi criada para te dar controle, e é isso mesmo que você terá, então, gerencie os seus videogames da maneira que for te deixar mais satisfeito!
+## 👨🏻‍💻 Development information
+The application was developed under the REST parttern. I used the Python programming language and the FastAPI framework, this framework has become very popular for being asynchornous, using an ASGI server, in contrast to Flask or Django.
 
-## 👨🏻‍💻 Desenvolvimento
-A API foi desenvolvida seguindo o padrão REST. Utilizei a linguagem Python e o framework FastAPI, escolhi esse framework por ser fácil de aprender, divertido de usar e ele ainda gera o swagger automaticamente, o que acho o máximo. Além disso, esse framework se popularizou por ser assíncrono, usa um servidor ASGI, diferentemente do Flask e o Django.
+I used for this application, a MVC-like architecture, just changing the name of the components. The models are still being called models, the views are composed by routers (definition of the endpoints) and schemas (base model for data input/output using JSON), and the controllers are being called repositories.
 
-Eu utilizei para essa aplicação, a arquitetura de models e schemas. Onde os models são classes que refletem exatamente as suas tabelas no banco de dados e os schemas são classes que representam a estrutura dos JSON's tanto de request quanto de response. Esses schemas são escritos usando a classe BaseModel, da lib pydantic, com a qual o FastAPI trabalha em conjunto.
+* DBMS used: SQLite
+* Testing: unit tests with Pytest
 
-### Banco de dados:
-Falando sobre dados, o SGDB utilizado é o SQLite, escolhido por ser leve, rápido e por não necessitar que seja inicializado ou coisa do tipo, isso porque o banco fica dentro de um arquivo .db localizado na raíz do projeto. Acho que isso me ajudará a fazer o deploy de maneira mais tranquila, pois deployment é um assunto que ainda estou estudando e não tenho muita proficiência.
-
-### Testes:
-Utilizei o Pytest para desenvolver os testes da aplicação, confesso que a parte de testes foi um pouco complicada para mim, não a parte do framework, acho o Pytest muito fácil de usar. O problema foi para mockar as funções, estudei e pesquisei muito mas não consegui entender e nem fazer funcionar, a minha meta é conseguir isso antes de lançar uma versão definitiva.
-
-Atualmente os testes rodam de maneira em que a conexão com o banco de dados é realizada, então eles podem falhar às vezes, sendo necessário fazer alguns ajustes no banco de dados antes de sua execução.
-
-Não utilizei o TDD para o desenvolvimento desta aplicação, os testes foram escritos após o término da aplicação em sí.
-
-### Boas práticas
-Segui o máximo possível as recomendações da PEP8 para a escrita do código, exceto nos testes, onde foi necessário ultrapassar o limite de 79 caracteres na linha.
-
-Escrevi docstrings nos módulos, classes e funções sempre que necessário, além de comentários isolados, tudo para ajudar a entender melhor o que o código está fazendo.
-
-## 💻 Como rodar o projeto na minha máquina?
-Para rodar o MyGameLibrary em sua máquina, você precisa das seguintes ferramentas:
+## 💻 How do I run this project on my computer?
+To run o MyGameLibrary em sua máquina, você precisa das seguintes ferramentas:
 * Python 3.11.x instalado na máquina;
 * Um terminal PowerShell;
 * Um navegador web ou programas de teste de API como Postman ou Insomnia.
@@ -68,6 +54,6 @@ Após subir a aplicação no localhost, acesse o Swagger pela url http:localhost
 ## 🚀 Deploy
 A versão beta ainda não será deployada na web, pois ainda estou estudando e aprendendo conteinerização com Docker e procurando o melhor serviço de hospedagem para mim. Nas próximas versões, será possível testar minha API diretamente do seu navegador ou utilizando ferramentas famosas como o Postman.
 
-### Responsável pelo projeto:
+### Project owner:
 | [<img src="https://avatars.githubusercontent.com/u/112123011?s=400&u=22ad423853238139b7091769db66445e54a7e678&v=4" width=115><br><sub>Fernando Fukunaga</sub>](https://github.com/fernando-fukunaga) |
 | :---: |
