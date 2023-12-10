@@ -7,8 +7,9 @@ from src.errors import errors
 from sqlalchemy.orm import Session
 
 
-def email_ja_cadastrado(session: Session, email: str) -> bool:
-    usuario = RepositorioUsuario(session).select_usuario_by_email(email)
+def _email_ja_cadastrado(session: Session, email: str) -> bool:
+    usuario = RepositorioUsuario(session).select_usuario(column="email",
+                                                         value=email)
 
     if not usuario:
         return False
@@ -16,8 +17,9 @@ def email_ja_cadastrado(session: Session, email: str) -> bool:
     return True
 
 
-def username_ja_cadastrado(session: Session, username: str) -> bool:  
-    usuario = RepositorioUsuario(session).select_usuario_by_username(username)
+def _username_ja_cadastrado(session: Session, username: str) -> bool:  
+    usuario = RepositorioUsuario(session).select_usuario(column="username",
+                                                         value=username)
 
     if not usuario:
         return False
@@ -25,7 +27,7 @@ def username_ja_cadastrado(session: Session, username: str) -> bool:
     return True
 
 
-def username_muito_grande(username: str) -> bool:
+def _username_muito_grande(username: str) -> bool:
     if len(username) > 14:
         return True
 
@@ -34,13 +36,13 @@ def username_muito_grande(username: str) -> bool:
 
 def validar_dados_de_cadastro(session: Session,
                               schema_usuario: schemas.UsuarioCadastro):
-    if email_ja_cadastrado(session, schema_usuario.email):
+    if _email_ja_cadastrado(session, schema_usuario.email):
         raise errors.erro_400("Email já cadastrado!")
     
-    if username_ja_cadastrado(session, schema_usuario.username):
+    if _username_ja_cadastrado(session, schema_usuario.username):
         raise errors.erro_400("Username já cadastrado!")
     
-    if username_muito_grande(schema_usuario.username):
+    if _username_muito_grande(schema_usuario.username):
         raise errors.erro_400("Username não pode ter mais de 14 caracteres!")
     
     return True
@@ -59,7 +61,8 @@ def criar_usuario(session: Session,
 
 
 def autenticar(session: Session, username: str, senha: str) -> schemas.Token:
-    usuario = RepositorioUsuario(session).select_usuario_by_username(username)
+    usuario = RepositorioUsuario(session).select_usuario(column="username",
+                                                         value=username)
 
     if not usuario:
         raise errors.erro_400("Usuário ou senha incorretos!")

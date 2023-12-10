@@ -30,35 +30,13 @@ class RepositorioUsuario:
 
         return usuario
 
-    def select_usuarios(self) -> List[models.Usuario]:
-        try:
-            usuarios = self.session.query(models.Usuario).all()
-        except Exception as e:
-            print(e)
-            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")        
-
-        return usuarios
-
-    def select_usuario_by_email(self, email: str) -> models.Usuario:
+    def select_usuario(self, column: str, value: str) -> models.Usuario:
         try:
             usuario = self.session.query(
-                models.Usuario).filter_by(email=email).first()
+                models.Usuario).filter_by(**{column:value}).first()
         except Exception as e:
             print(e)
             raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
-        
-        if not usuario:
-            return None
-        
-        return usuario
-
-    def select_usuario_by_username(self, username: str) -> models.Usuario:
-        try:
-            usuario = self.session.query(
-                models.Usuario).filter_by(username=username).first()
-        except Exception as e:
-            print(e)
-            raise errors.erro_500("Ocorreu um erro interno!")
         
         if not usuario:
             return None
