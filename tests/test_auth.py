@@ -2,6 +2,7 @@
 from fastapi.testclient import TestClient
 from src.main import app
 from tests.gerador_numeros import gera_numero
+from unittest.mock import patch, MagicMock
 
 """Criando um testclient para fazer requisições sem precisar subir o servidor,
 isso aumenta muito o desempenho dos testes, ele usa o HTTPX
@@ -13,16 +14,28 @@ TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZlcm5hbmRvIiwidm
 headers = {"Authorization": f"Bearer {TOKEN}"}
 
 
-class TestSignUp:
+class TestSignUp():
 
-    def test_criar_usuario_retorna_201(self):
+    @patch("src.services.services_auth.RepositorioUsuario.insert_usuario")
+    @patch("src.services.services_auth.RepositorioUsuario.select_usuario")
+    def test_criar_usuario_retorna_201(self, mock_select, mock_insert):
+        mock_user_model = MagicMock(nome='daniel',
+                                    email='daniel',
+                                    username='daniel',
+                                    senha='daniel')
+        mock_insert.return_value = mock_user_model
+        mock_select.return_value = None
+
         response = client.post(url="/auth/signup",
-                               json={"nome": "Test Dummy",
-                                     "email": f"test{gera_numero()}@email.com",
-                                     "username": f"test{gera_numero()}",
-                                     "senha": "senha"})
+                               json={"nome": "daniel",
+                                     "email": "daniel",
+                                     "username": "daniel",
+                                     "senha": "daniel"})
 
+        mock_select.assert_called()
+        mock_insert.assert_called_once()
         assert response.status_code == 201
+        assert response.json()['nome'] == 'daniel'
 
     def test_criar_usuario_com_email_existente_retorna_400(self):
         response = client.post(url="/auth/signup",
