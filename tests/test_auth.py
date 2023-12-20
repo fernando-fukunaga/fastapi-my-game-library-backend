@@ -1,20 +1,6 @@
 # Testes para endpoints de autenticação
-from fastapi.testclient import TestClient
-from src.main import app
+from tests.config import client, password_context, headers
 from unittest.mock import patch, MagicMock
-from passlib.context import CryptContext
-
-# Criando contexto de bcrypt para senhas de usuarios mockados
-password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-"""Criando um testclient para fazer requisições sem precisar subir o servidor,
-isso aumenta muito o desempenho dos testes, ele usa o HTTPX
-por baixo dos panos:"""
-client = TestClient(app)
-
-# Token fixo para o usuário fernando, sem expiração, para testes:
-TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZlcm5hbmRvIiwidmFsaWRhZGUiOiIxMy8wNy8yMDIzLCAxOTo0OToxOSJ9.ozwDM63scHmWLy5mXpADw7NVdSjF1nvUVVJRahTDH3w"
-headers = {"Authorization": f"Bearer {TOKEN}"}
 
 
 class TestSignUp:
@@ -111,9 +97,17 @@ class TestLogin:
 
 class TestMe:
 
-    def test_rota_me_com_token_valido_retorna_200(self):
+    @patch("src.utils.auth_utils.RepositorioUsuario.select_usuario")
+    def test_rota_me_com_token_valido_retorna_200(self, mock_select):
+        mock_user_model = MagicMock(nome='fernando',
+                                    email='fernando',
+                                    username='fernando',
+                                    senha=password_context.hash('fernando'))
+        mock_select.return_value = mock_user_model
+        
         response = client.get(url="/auth/me", headers=headers)
 
+        mock_select.assert_called_once()
         assert response.status_code == 200
 
     def test_rota_me_com_token_invalido_retorna_401(self):

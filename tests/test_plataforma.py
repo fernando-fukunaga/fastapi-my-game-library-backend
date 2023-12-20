@@ -1,4 +1,4 @@
-# Testes para endpoints de autenticação
+# Testes para endpoints de plataforma
 from fastapi.testclient import TestClient
 from src.main import app
 
