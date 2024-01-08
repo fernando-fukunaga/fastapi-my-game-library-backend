@@ -73,11 +73,11 @@ class TestJogo:
 
         assert response.status_code == 422
 
-    def test_deletar_jogo_corretamente_retorna_200(self):
+    def test_deletar_jogo_corretamente_retorna_204(self):
         response = client.delete(url="/jogos/2",
                                  headers=headers)
 
-        assert response.status_code == 200
+        assert response.status_code == 204
 
     def test_deletar_jogo_inexistente_retorna_404(self):
         response = client.delete(url="/jogos/0",

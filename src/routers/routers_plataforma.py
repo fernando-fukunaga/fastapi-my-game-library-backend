@@ -51,7 +51,7 @@ async def atualizar_plataforma(id_plataforma: int,
                                                     usuario_logado)
 
 
-@router.delete("/plataformas/{id_plataforma}")
+@router.delete("/plataformas/{id_plataforma}", status_code=204)
 async def remover_plataforma(id_plataforma: int,
                              usuario_logado=Depends(obter_usuario_logado),
                              session: Session = Depends(obter_sessao)):
