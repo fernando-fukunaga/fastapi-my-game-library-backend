@@ -5,6 +5,7 @@ from sqlalchemy import update
 from src.infra.sqlalchemy.models import models
 from src.schemas import schemas
 from src.errors import errors
+from typing import List
 
 
 class RepositorioJogo:
@@ -22,7 +23,25 @@ class RepositorioJogo:
     def __init__(self, session: Session) -> None:
         self.session = session
 
-    def usuario_possui_plataforma(self, jogo: models.Jogo,
+    def insert_jogo(self, jogo: models.Jogo) -> models.Jogo:
+        try:
+            self.session.add(jogo)
+            self.session.commit()
+            return jogo
+        except Exception:
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
+        
+    def select_jogos(self) -> List[models.Jogo]:
+        try:
+            self.session.query(models.Jogo).filter_by(id_usuario=usuario_logado.id)
+        except Exception:
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")        
+
+
+
+
+
+'''    def usuario_possui_plataforma(self, jogo: models.Jogo,
                                   usuario_logado: models.Usuario) -> bool:
         consulta = (self.session.query(models.Plataforma).
                     filter_by(id=jogo.id_plataforma,
@@ -104,4 +123,4 @@ class RepositorioJogo:
 
         self.session.delete(self.obter(id_jogo, usuario_logado))
         self.session.commit()
-        return {"mensagem": "Jogo removido com sucesso!"}
+        return {"mensagem": "Jogo removido com sucesso!"}'''

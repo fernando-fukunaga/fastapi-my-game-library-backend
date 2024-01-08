@@ -4,6 +4,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from src.infra.sqlalchemy.config.database import obter_sessao
 from src.infra.sqlalchemy.repositorios.repositorio_jogo import RepositorioJogo
+from src.services import services_jogo
 from src.utils.auth_utils import obter_usuario_logado
 from src.schemas import schemas
 
@@ -16,7 +17,7 @@ router = APIRouter(tags=["Jogos"])
 async def cadastrar_jogo(jogo: schemas.JogoCadastro,
                          usuario_logado=Depends(obter_usuario_logado),
                          session: Session = Depends(obter_sessao)):
-    return RepositorioJogo(session).criar(jogo, usuario_logado)
+    return services_jogo.criar_jogo(session, jogo, usuario_logado)
 
 
 @router.get("/jogos", response_model=List[schemas.JogoDadosSimples])
