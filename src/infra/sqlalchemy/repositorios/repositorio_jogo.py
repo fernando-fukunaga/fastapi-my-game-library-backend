@@ -1,11 +1,12 @@
 # Módulo para interações com a tabela de jogos do banco
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import update
 from src.infra.sqlalchemy.models import models
+from src.infra.sqlalchemy.repositorios.repositorio_plataforma import RepositorioPlataforma
 from src.schemas import schemas
 from src.errors import errors
 from typing import List
+
 
 
 class RepositorioJogo:
@@ -30,12 +31,18 @@ class RepositorioJogo:
             return jogo
         except Exception:
             raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
-        
-    def select_jogos(self) -> List[models.Jogo]:
+
+    def select_jogos(self, column: str, value: str) -> List[models.Jogo]:
         try:
-            self.session.query(models.Jogo).filter_by(id_usuario=usuario_logado.id)
-        except Exception:
-            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")        
+            jogos = self.session.query(
+                models.Jogo).filter_by(**{column:value}).all()
+        except Exception as e:
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
+        
+        if not jogos:
+            return None
+        
+        return jogos
 
 
 

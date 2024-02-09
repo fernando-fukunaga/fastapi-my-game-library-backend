@@ -23,7 +23,7 @@ async def cadastrar_jogo(jogo: schemas.JogoCadastro,
 @router.get("/jogos", response_model=List[schemas.JogoDadosSimples])
 async def listar_jogos(usuario_logado=Depends(obter_usuario_logado),
                        session: Session = Depends(obter_sessao)):
-    return RepositorioJogo(session).listar(usuario_logado)
+    return services_jogo.listar_jogos(session, usuario_logado)
 
 
 @router.get("/jogos/{id_jogo}", response_model=schemas.JogoDadosDetalhados)

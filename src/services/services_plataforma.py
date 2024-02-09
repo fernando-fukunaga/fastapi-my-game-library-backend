@@ -21,7 +21,7 @@ def listar_plataformas(session: Session,
                                                                Plataforma]:
     id_usuario = str(usuario_logado.id)
     return RepositorioPlataforma(session).select_plataformas(
-        column="id_usuario",value=id_usuario)
+        column="id_usuario", value=id_usuario)
 
 
 def obter_plataforma(session: Session,

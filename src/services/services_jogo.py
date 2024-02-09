@@ -46,5 +46,18 @@ def criar_jogo(session: Session,
 
 def listar_jogos(session: Session,
                  usuario_logado: models.Usuario) -> List[models.Jogo]:
-    return RepositorioJogo(session).select_jogos("id_usuario",
-                                                 str(usuario_logado.id))
+    lista_de_plataformas = RepositorioPlataforma(session).select_plataformas(
+        "id_usuario", str(usuario_logado.id)
+    )
+
+    if not lista_de_plataformas:
+        return []
+
+    lista_de_jogos = []
+    for plataforma in lista_de_plataformas:
+        lista_de_jogos.extend(
+            RepositorioJogo(session).select_jogos("id_plataforma",
+                                                  str(plataforma.id))
+        )
+    
+    return lista_de_jogos
