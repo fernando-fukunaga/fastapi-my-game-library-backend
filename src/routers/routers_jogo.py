@@ -30,7 +30,7 @@ async def listar_jogos(usuario_logado=Depends(obter_usuario_logado),
 async def obter_jogo(id_jogo: int,
                      usuario_logado=Depends(obter_usuario_logado),
                      session: Session = Depends(obter_sessao)):
-    return RepositorioJogo(session).obter(id_jogo, usuario_logado)
+    return services_jogo.obter_jogo(session, usuario_logado, id_jogo)
 
 
 @router.put("/jogos/{id_jogo}", response_model=schemas.JogoDadosSimples)

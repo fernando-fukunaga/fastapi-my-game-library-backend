@@ -61,3 +61,22 @@ def listar_jogos(session: Session,
         )
     
     return lista_de_jogos
+
+
+def obter_jogo(session: Session,
+               usuario_logado: models.Usuario,
+               id_jogo: int) -> models.Jogo:
+    jogo = RepositorioJogo(session).select_jogo("id", str(id_jogo))
+
+    if not jogo:
+        raise errors.erro_404("Jogo não encontrado!")
+
+    lista_de_plataformas_usuario = RepositorioPlataforma(session).select_plataformas(
+        "id_usuario", str(usuario_logado.id)
+    )
+
+    for plataforma in lista_de_plataformas_usuario:
+        if plataforma.id != jogo.id_plataforma:
+            raise errors.erro_404("Jogo não encontrado!")
+
+    return jogo

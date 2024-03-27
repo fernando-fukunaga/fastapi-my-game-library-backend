@@ -44,7 +44,17 @@ class RepositorioJogo:
         
         return jogos
 
+    def select_jogo(self, column: str, value: str) -> models.Jogo:
+        try:
+            jogo = self.session.query(
+                models.Jogo).filter_by(**{column: value}).first()
+        except Exception as e:
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
 
+        if not jogo:
+            return None
+
+        return jogo
 
 
 

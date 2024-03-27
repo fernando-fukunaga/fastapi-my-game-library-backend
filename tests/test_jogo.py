@@ -35,6 +35,12 @@ class TestJogo:
 
         assert response.status_code == 404
 
+    def test_obter_jogo_existente_mas_nao_pertencente_ao_usuario_retorna_404(self):
+        response = client.get(url="/jogos/7",
+                              headers=headers)
+
+        assert response.status_code == 404
+
     def test_obter_jogo_com_string_retorna_422(self):
         response = client.get(url="/jogos/a",
                               headers=headers)

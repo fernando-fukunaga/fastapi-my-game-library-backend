@@ -20,8 +20,11 @@ def listar_plataformas(session: Session,
                        usuario_logado: models.Usuario) -> List[models.
                                                                Plataforma]:
     id_usuario = str(usuario_logado.id)
-    return RepositorioPlataforma(session).select_plataformas(
+    query_result = RepositorioPlataforma(session).select_plataformas(
         column="id_usuario", value=id_usuario)
+    if not query_result:
+        return []
+    return query_result
 
 
 def obter_plataforma(session: Session,
