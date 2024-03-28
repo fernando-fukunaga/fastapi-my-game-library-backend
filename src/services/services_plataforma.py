@@ -39,6 +39,7 @@ def obter_plataforma(session: Session,
     else:
         raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
 
+
 def atualizar_plataforma(
         session: Session,
         id_plataforma: int,
@@ -51,7 +52,7 @@ def atualizar_plataforma(
         raise errors.erro_404("Plataforma não encontrada!")
     
     if plataforma_existe.id_usuario != usuario_logado.id:
-        raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
+        raise errors.erro_404("Plataforma não encontrada!")
     
     return RepositorioPlataforma(session).update_plataforma(
         id_plataforma,
@@ -69,7 +70,7 @@ def remover_plataforma(
         raise errors.erro_404("Plataforma não encontrada!")
     
     if plataforma_a_ser_excluida.id_usuario != usuario_logado.id:
-        raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
+        raise errors.erro_404("Plataforma não encontrada!")
     
     RepositorioPlataforma(session).delete_plataforma(
         plataforma_a_ser_excluida)

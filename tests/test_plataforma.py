@@ -47,7 +47,7 @@ class TestPlataforma:
         assert response.status_code == 422
 
     def test_atualizar_plataforma_corretamente_retorna_200(self):
-        response = client.put(url="/plataformas/2",
+        response = client.put(url="/plataformas/3",
                               headers=headers,
                               json={"nome": "Test",
                                     "fabricante": "Test"})
@@ -56,6 +56,14 @@ class TestPlataforma:
 
     def test_atualizar_plataforma_inexistente_retorna_404(self):
         response = client.put(url="/plataformas/0",
+                              headers=headers,
+                              json={"nome": "Test",
+                                    "fabricante": "Test"})
+
+        assert response.status_code == 404
+
+    def test_atualizar_plataforma_existente_mas_nao_pertencente_ao_usuario_logado_retorna_404(self):
+        response = client.put(url="/plataformas/2",
                               headers=headers,
                               json={"nome": "Test",
                                     "fabricante": "Test"})
@@ -71,13 +79,19 @@ class TestPlataforma:
         assert response.status_code == 422
 
     def test_deletar_plataforma_corretamente_retorna_204(self):
-        response = client.delete(url="/plataformas/2",
+        response = client.delete(url="/plataformas/3",
                                  headers=headers)
 
         assert response.status_code == 204
 
     def test_deletar_plataforma_inexistente_retorna_404(self):
         response = client.delete(url="/plataformas/0",
+                                 headers=headers)
+
+        assert response.status_code == 404
+
+    def test_deletar_plataforma_existente_mas_nao_pertencente_ao_usuario_logado_retorna_404(self):
+        response = client.delete(url="/plataformas/2",
                                  headers=headers)
 
         assert response.status_code == 404

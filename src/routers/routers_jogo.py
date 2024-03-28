@@ -38,11 +38,11 @@ async def atualizar_jogo(id_jogo: int,
                          jogo: schemas.JogoPut,
                          usuario_logado=Depends(obter_usuario_logado),
                          session: Session = Depends(obter_sessao)):
-    return RepositorioJogo(session).atualizar(id_jogo, jogo, usuario_logado)
+    return services_jogo.atualizar_jogo(session, id_jogo, jogo, usuario_logado)
 
 
 @router.delete("/jogos/{id_jogo}", status_code=204)
 async def remover_jogo(id_jogo: int,
                        usuario_logado=Depends(obter_usuario_logado),
                        session: Session = Depends(obter_sessao)):
-    return RepositorioJogo(session).remover(id_jogo, usuario_logado)
+    return services_jogo.remover_jogo(session, usuario_logado, id_jogo)

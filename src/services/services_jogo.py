@@ -1,7 +1,5 @@
 # Módulo para interações com a tabela de jogos do banco
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import update
 from src.infra.sqlalchemy.models import models
 from src.infra.sqlalchemy.repositorios.repositorio_jogo import RepositorioJogo
 from src.infra.sqlalchemy.repositorios.repositorio_plataforma import RepositorioPlataforma
@@ -80,3 +78,35 @@ def obter_jogo(session: Session,
             raise errors.erro_404("Jogo não encontrado!")
 
     return jogo
+
+
+def atualizar_jogo(session: Session,
+                   id_jogo: int,
+                   novo_jogo: schemas.JogoPut,
+                   usuario_logado: models.Usuario) -> models.Jogo:
+    lista_de_jogos_usuario = listar_jogos(session, usuario_logado)
+
+    if not lista_de_jogos_usuario:
+        raise errors.erro_404("Jogo não encontrado!")
+
+    for jogo in lista_de_jogos_usuario:
+        if jogo.id == id_jogo:
+            return RepositorioJogo(session).update_jogo(id_jogo,
+                                                        novo_jogo)
+
+    raise errors.erro_404("Jogo não encontrado!")
+
+
+def remover_jogo(session: Session,
+                 usuario_logado: models.Usuario,
+                 id_jogo: int) -> None:
+    lista_de_jogos_usuario = listar_jogos(session, usuario_logado)
+
+    if not lista_de_jogos_usuario:
+        raise errors.erro_404("Jogo não encontrado!")
+
+    for jogo in lista_de_jogos_usuario:
+        if jogo.id == id_jogo:
+            return RepositorioJogo(session).delete_jogo(jogo)
+
+    raise errors.erro_404("Jogo não encontrado!")
