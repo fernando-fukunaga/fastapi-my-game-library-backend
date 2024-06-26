@@ -1,11 +1,34 @@
 # Testes para endpoints de Jogo
+import src.infra.sqlalchemy.repositorios.repositorio_jogo
 from tests.config import client, headers
 from unittest.mock import patch, MagicMock
 
 
 class TestJogo:
 
-    def test_criar_jogo_retorna_201(self):
+    @patch("src.services.services_jogo.RepositorioJogo.insert_jogo")
+    @patch("src.services.services_jogo.RepositorioPlataforma.select_plataformas")
+    def test_criar_jogo_corretamente_retorna_201(self, mock_select, mock_insert):
+        mock_jogo_model = MagicMock(
+            nome="Test",
+            id_plataforma=1,
+            ano=2000,
+            categoria="Test",
+            desenvolvedora="Test",
+            progresso=50.0,
+            observacoes="Test"
+        )
+        mock_plataforma_model = MagicMock(
+            id=1,
+            nome="Test",
+            id_usuario=1,
+            fabricante="Test",
+            observacoes="Test"
+        )
+        mock_jogo_model.plataforma = mock_plataforma_model
+        mock_insert.return_value = mock_jogo_model
+        mock_select.return_value = [mock_plataforma_model]
+
         response = client.post(url="/jogos",
                                json={"nome": "Test",
                                      "id_plataforma": 1,
@@ -15,6 +38,8 @@ class TestJogo:
                                      "progresso": 50.0},
                                headers=headers)
 
+        mock_insert.assert_called_once()
+        mock_select.assert_called_once()
         assert response.status_code == 201
 
     def test_listar_jogos_retorna_200(self):

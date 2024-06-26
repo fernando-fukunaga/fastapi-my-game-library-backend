@@ -7,7 +7,7 @@ class TestSignUp:
 
     @patch("src.services.services_auth.RepositorioUsuario.insert_usuario")
     @patch("src.services.services_auth.RepositorioUsuario.select_usuario")
-    def test_criar_usuario_retorna_201(self, mock_select, mock_insert):
+    def test_criar_usuario_corretamente_retorna_201(self, mock_select, mock_insert):
         mock_user_model = MagicMock(nome='daniel',
                                     email='daniel',
                                     username='daniel',
@@ -25,7 +25,7 @@ class TestSignUp:
         mock_insert.assert_called_once()
         assert response.status_code == 201
 
-    @patch("src.services.services_auth.RepositorioUsuario.select_usuario")    
+    @patch("src.services.services_auth.RepositorioUsuario.select_usuario")
     def test_criar_usuario_com_email_ou_username_existentes_retorna_400(self, mock_select):
         mock_user_model = MagicMock(nome='daniel',
                                     email='daniel',
@@ -42,13 +42,16 @@ class TestSignUp:
         mock_select.assert_called()
         assert response.status_code == 400
 
-    def test_criar_usuario_com_username_maior_que_14_chars_retorna_400(self):
+    @patch("src.services.services_auth.RepositorioUsuario.select_usuario")
+    def test_criar_usuario_com_username_maior_que_14_chars_retorna_400(self, mock_select):
+        mock_select.return_value = None
         response = client.post(url="/auth/signup",
                                json={"nome": "daniel",
                                      "email": "daniel",
                                      "username": "daniel000000000",
                                      "senha": "daniel"})
 
+        mock_select.assert_called()
         assert response.status_code == 400
 
 
