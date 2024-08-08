@@ -13,7 +13,7 @@ def _usuario_possui_plataforma(session: Session,
                                usuario_logado: models.Usuario) -> bool:
     plataformas = RepositorioPlataforma(session).select_plataformas(
         "id_usuario",
-        usuario_logado.id)
+        str(usuario_logado.id))
 
     if not plataformas:
         return False
