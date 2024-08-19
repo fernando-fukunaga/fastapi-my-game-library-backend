@@ -232,6 +232,7 @@ class TestJogo:
         response = client.delete(url="/jogos/1",
                                  headers=headers)
 
+        mock_delete.assert_called_once()
         assert response.status_code == 204
 
     def test_deletar_jogo_inexistente_retorna_404(self):
