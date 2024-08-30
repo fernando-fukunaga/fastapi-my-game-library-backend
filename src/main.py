@@ -4,6 +4,7 @@ Esse módulo é o módulo principal da aplicação, o qual o servidor utiliza
 para levantar a mesma, criar o banco de dados se o mesmo não estiver criado
 e configura middlewares para receber requisições de qualquer origem.
 """
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.routers import routers_auth, routers_plataforma, routers_jogo, router_home
@@ -43,3 +44,6 @@ app.add_middleware(CORSMiddleware,
                    allow_credentials=True,
                    allow_methods=["*"],
                    allow_headers=["*"])
+
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port=8000)

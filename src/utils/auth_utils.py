@@ -37,7 +37,8 @@ def obter_usuario_logado(token: str = Depends(oauth2_schema),
     if not username:
         raise errors.erro_401("Token inválido ou vencido!")
 
-    usuario = RepositorioUsuario(session).obter_por_username(username)
+    usuario = RepositorioUsuario(session).select_usuario(column="username",
+                                                         value=username)
 
     if not usuario:
         raise errors.erro_401("Token inválido ou vencido!")

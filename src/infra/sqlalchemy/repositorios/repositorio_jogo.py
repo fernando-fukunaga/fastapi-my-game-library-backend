@@ -1,10 +1,10 @@
 # Módulo para interações com a tabela de jogos do banco
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import update
 from src.infra.sqlalchemy.models import models
-from src.schemas import schemas
 from src.errors import errors
+from typing import List, Any
+from src.schemas.schemas import JogoPut
 
 
 class RepositorioJogo:
@@ -22,86 +22,57 @@ class RepositorioJogo:
     def __init__(self, session: Session) -> None:
         self.session = session
 
-    def usuario_possui_plataforma(self, jogo: models.Jogo,
-                                  usuario_logado: models.Usuario) -> bool:
-        consulta = (self.session.query(models.Plataforma).
-                    filter_by(id=jogo.id_plataforma,
-                              id_usuario=usuario_logado.id).
-                    first())
-
-        if not consulta:
-            return False
-
-        return True
-
-    def criar(self, schema_jogo: schemas.JogoCadastro,
-              usuario_logado: models.Usuario):
-        model_jogo = models.Jogo(nome=schema_jogo.nome,
-                                 id_plataforma=schema_jogo.id_plataforma,
-                                 ano=schema_jogo.ano,
-                                 categoria=schema_jogo.categoria,
-                                 desenvolvedora=schema_jogo.desenvolvedora,
-                                 observacoes=schema_jogo.observacoes,
-                                 progresso=schema_jogo.progresso)
-
-        if not self.usuario_possui_plataforma(model_jogo, usuario_logado):
-            raise errors.erro_400("Usuário não possui essa plataforma!")
-
-        self.session.add(model_jogo)
-        self.session.commit()
-        self.session.refresh(model_jogo)
-        return model_jogo
-
-    def listar(self, usuario_logado: models.Usuario):
-        lista_inicial = self.session.query(models.Jogo).all()
-        lista_final = []
-
-        for jogo in lista_inicial:
-            if self.usuario_possui_plataforma(jogo, usuario_logado):
-                lista_final.append(jogo)
-
-        return lista_final
-
-    def obter(self, id_jogo: int, usuario_logado: models.Usuario):
-        model_jogo = (self.session.query(models.Jogo).filter_by(id=id_jogo).
-                      first())
-
-        if not model_jogo:
-            raise errors.erro_404("Jogo não encontrado!")
-
-        if not self.usuario_possui_plataforma(model_jogo, usuario_logado):
-            raise errors.erro_404("Jogo não encontrado!")
-
-        return model_jogo
-
-    def atualizar(self, id_jogo: int, schema_jogo: schemas.JogoPut,
-                  usuario_logado: models.Usuario):
+    def insert_jogo(self, jogo: models.Jogo) -> models.Jogo:
         try:
-            self.obter(id_jogo, usuario_logado)
+            self.session.add(jogo)
+            self.session.commit()
+            return jogo
+        except Exception:
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
 
-        except HTTPException:
-            raise errors.erro_404("Jogo não encontrado!")
-
-        update_statement = (update(models.Jogo).
-                            where(models.Jogo.id == id_jogo).
-                            values(nome=schema_jogo.nome,
-                                   ano=schema_jogo.ano,
-                                   categoria=schema_jogo.categoria,
-                                   desenvolvedora=schema_jogo.desenvolvedora,
-                                   observacoes=schema_jogo.observacoes,
-                                   progresso=schema_jogo.progresso))
-
-        self.session.execute(update_statement)
-        self.session.commit()
-        return self.obter(id_jogo, usuario_logado)
-
-    def remover(self, id_jogo: int, usuario_logado: models.Usuario):
+    def select_jogo(self, column: str, value: str) -> models.Jogo | None:
         try:
-            self.obter(id_jogo, usuario_logado)
+            jogo = self.session.query(
+                models.Jogo).filter_by(**{column: value}).first()
+        except Exception:
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
 
-        except HTTPException:
-            raise errors.erro_404("Jogo não encontrado!")
+        return jogo
 
-        self.session.delete(self.obter(id_jogo, usuario_logado))
-        self.session.commit()
-        return {"mensagem": "Jogo removido com sucesso!"}
+    def select_jogos(self, column: str, value: str) -> List[models.Jogo | Any]:
+        try:
+            jogos = self.session.query(
+                models.Jogo).filter_by(**{column: value}).all()
+        except Exception:
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
+        
+        return jogos
+
+    def update_jogo(self,
+                    id_jogo: int,
+                    novo_jogo: JogoPut) -> models.Jogo:
+        try:
+            update_statement = (update(models.Jogo).
+                                where(models.Jogo.id == id_jogo).
+                                values(nome=novo_jogo.nome,
+                                       ano=novo_jogo.ano,
+                                       categoria=novo_jogo.categoria,
+                                       desenvolvedora=novo_jogo.desenvolvedora,
+                                       observacoes=novo_jogo.observacoes,
+                                       progresso=novo_jogo.progresso))
+            self.session.execute(update_statement)
+            self.session.commit()
+            return self.select_jogo(column="id", value=str(id_jogo))
+
+        except Exception:
+            raise errors.erro_500("Ocorreu um erro interno, tente novamente!")
+
+    def delete_jogo(self,
+                    jogo: models.Jogo) -> None:
+        try:
+            self.session.delete(jogo)
+            self.session.commit()
+            return None
+
+        except Exception:
+            raise errors.erro_500("Ocorreu um erro interno, tente novamente!")

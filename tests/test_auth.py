@@ -1,89 +1,108 @@
 # Testes para endpoints de autenticação
-from fastapi.testclient import TestClient
-from src.main import app
-from tests.gerador_numeros import gera_numero
+from tests.config import client, headers, mock_user_model
+from unittest.mock import patch
 
-"""Criando um testclient para fazer requisições sem precisar subir o servidor,
-isso aumenta muito o desempenho dos testes, ele usa o HTTPX
-por baixo dos panos:"""
-client = TestClient(app)
-
-# Token fixo para o usuário fernando, sem expiração, para testes:
-TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZlcm5hbmRvIiwidmFsaWRhZGUiOiIxMy8wNy8yMDIzLCAxOTo0OToxOSJ9.ozwDM63scHmWLy5mXpADw7NVdSjF1nvUVVJRahTDH3w"
-headers = {"Authorization": f"Bearer {TOKEN}"}
+patch_insert_usuario_in_services = "src.services.services_auth.RepositorioUsuario.insert_usuario"
+patch_select_usuario_in_services = "src.services.services_auth.RepositorioUsuario.select_usuario"
+patch_select_usuario_for_authentication = "src.utils.auth_utils.RepositorioUsuario.select_usuario"
 
 
 class TestSignUp:
 
-    def test_criar_usuario_retorna_201(self):
-        response = client.post(url="/auth/signup",
-                               json={"nome": "Test Dummy",
-                                     "email": f"test{gera_numero()}@email.com",
-                                     "username": f"test{gera_numero()}",
-                                     "senha": "senha"})
+    @patch(patch_insert_usuario_in_services)
+    @patch(patch_select_usuario_in_services)
+    def test_criar_usuario_corretamente_retorna_201(self, mock_select, mock_insert):
+        mock_insert.return_value = mock_user_model
+        mock_select.return_value = None
 
+        response = client.post(url="/auth/signup",
+                               json={"nome": "test",
+                                     "email": "test",
+                                     "username": "test",
+                                     "senha": "test"})
+
+        mock_select.assert_called()
+        mock_insert.assert_called_once()
         assert response.status_code == 201
 
-    def test_criar_usuario_com_email_existente_retorna_400(self):
-        response = client.post(url="/auth/signup",
-                               json={"nome": "Test Dummy",
-                                     "email": "fernando@email.com",
-                                     "username": f"test{gera_numero()}",
-                                     "senha": "senha"})
+    @patch(patch_select_usuario_in_services)
+    def test_criar_usuario_com_email_ou_username_existentes_retorna_400(self, mock_select):
+        mock_select.return_value = mock_user_model
 
+        response = client.post(url="/auth/signup",
+                               json={"nome": "test",
+                                     "email": "test",
+                                     "username": "test",
+                                     "senha": "test"})
+
+        mock_select.assert_called()
         assert response.status_code == 400
 
-    def test_criar_usuario_com_username_existente_retorna_400(self):
+    @patch(patch_select_usuario_in_services)
+    def test_criar_usuario_com_username_maior_que_14_chars_retorna_400(self, mock_select):
+        mock_select.return_value = None
+
         response = client.post(url="/auth/signup",
-                               json={"nome": "Test Dummy",
-                                     "email": f"test{gera_numero()}@email.com",
-                                     "username": "fernando",
-                                     "senha": "senha"})
+                               json={"nome": "test",
+                                     "email": "test",
+                                     "username": "test00000000000",
+                                     "senha": "test"})
 
-        assert response.status_code == 400
-
-    def test_criar_usuario_com_username_maior_que_14_chars_retorna_400(self):
-        response = client.post(url="/auth/signup",
-                               json={"nome": "Test Dummy",
-                                     "email": f"test{gera_numero()}@email.com",
-                                     "username": "test11111111111",
-                                     "senha": "senha"})
-
+        mock_select.assert_called()
         assert response.status_code == 400
 
 
 class TestLogin:
 
-    def test_tentar_login_com_usuario_existente_retorna_200(self):
+    @patch(patch_select_usuario_in_services)
+    def test_tentar_login_com_usuario_existente_retorna_200(self, mock_select):
+        mock_select.return_value = mock_user_model
+
         response = client.post(url="/auth/login",
-                               data={"username": "fernando",
-                                     "password": "senha"})
+                               data={"username": "test",
+                                     "password": "test"})
 
-        assert response.status_code == 200
+        mock_select.assert_called()
+        assert response.status_code == 200 
 
-    def test_tentar_login_com_usuario_inexistente_retorna_400(self):
+    @patch(patch_select_usuario_in_services)
+    def test_tentar_login_com_usuario_inexistente_retorna_400(self, mock_select):
+        mock_select.return_value = None
+
         response = client.post(url="/auth/login",
-                               data={"username": "usuario_inexistente",
-                                     "password": "senha"})
+                               data={"username": "test",
+                                     "password": "test"})
 
+        mock_select.assert_called()
         assert response.status_code == 400
 
-    def test_tentar_login_com_senha_incorreta_retorna_400(self):
-        response = client.post(url="/auth/login",
-                               data={"username": "fernando",
-                                     "password": "senha1"})
+    @patch(patch_select_usuario_in_services)
+    def test_tentar_login_com_senha_incorreta_retorna_400(self, mock_select):
+        mock_select.return_value = mock_user_model
 
+        response = client.post(url="/auth/login",
+                               data={"username": "test",
+                                     "password": "test0"})
+
+        mock_select.assert_called()
         assert response.status_code == 400
 
 
 class TestMe:
 
-    def test_rota_me_com_token_valido_retorna_200(self):
+    @patch(patch_select_usuario_for_authentication)
+    def test_rota_me_com_token_valido_retorna_200(self, mock_select):
+        mock_select.return_value = mock_user_model
+
         response = client.get(url="/auth/me", headers=headers)
 
+        mock_select.assert_called_once()
         assert response.status_code == 200
 
-    def test_rota_me_com_token_invalido_retorna_401(self):
+    @patch(patch_select_usuario_for_authentication)
+    def test_rota_me_com_token_invalido_retorna_401(self, mock_select):
+        mock_select.return_value = None
+
         response = client.get(url="/auth/me", headers={"Authorization": ""})
 
         assert response.status_code == 401

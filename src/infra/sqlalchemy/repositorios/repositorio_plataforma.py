@@ -1,9 +1,10 @@
 # Módulo para interações com a tabela de plataformas do banco
 from sqlalchemy.orm import Session
-from sqlalchemy import update, and_
-from src.schemas import schemas
 from src.infra.sqlalchemy.models import models
+from src.schemas.schemas import PlataformaCadastro
 from src.errors import errors
+from typing import List, Any
+from sqlalchemy import update
 
 
 class RepositorioPlataforma:
@@ -17,64 +18,65 @@ class RepositorioPlataforma:
         session (Session): sessão do SQLAlchemy para escrita e leitura
         no nosso banco.
     """
-
     def __init__(self, session: Session) -> None:
         self.session = session
 
-    def criar(self, schema_plataforma: schemas.PlataformaCadastro,
-              usuario_logado: models.Usuario):
-        model_plataforma = models.Plataforma(
-            nome=schema_plataforma.nome,
-            id_usuario=usuario_logado.id,
-            fabricante=schema_plataforma.fabricante,
-            observacoes=schema_plataforma.observacoes)
-        self.session.add(model_plataforma)
-        self.session.commit()
-        self.session.refresh(model_plataforma)
-        return model_plataforma
-
-    def listar(self, usuario_logado: models.Usuario):
-        return (self.session.query(models.Plataforma).
-                filter_by(id_usuario=usuario_logado.id).
-                all())
-
-    def obter(self, id_plataforma: int, usuario_logado: models.Usuario):
-        plataforma_encontrada = (self.session.query(models.Plataforma).
-                                 filter_by(id=id_plataforma,
-                                           id_usuario=usuario_logado.id).
-                                 first())
-
-        if not plataforma_encontrada:
-            raise errors.erro_404("Plataforma não encontrada!")
-
-        return plataforma_encontrada
-
-    def atualizar(self, id_plataforma: int,
-                  schema_plataforma: schemas.PlataformaCadastro,
-                  usuario_logado: models.Usuario):
+    def insert_plataforma(self,
+                          plataforma: models.Plataforma) -> models.Plataforma:
         try:
-            self.obter(id_plataforma, usuario_logado)
-        except:
-            raise errors.erro_404("Plataforma não encontrada!")
+            self.session.add(plataforma)
+            self.session.commit()
+        except Exception as e:
+            print(e)
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
 
-        update_statement = (update(models.Plataforma).
-                            where(and_(models.Plataforma.id == id_plataforma,
-                                       models.Plataforma.id_usuario ==
-                                       usuario_logado.id)).
-                            values(nome=schema_plataforma.nome,
-                                   fabricante=schema_plataforma.fabricante,
-                                   observacoes=schema_plataforma.observacoes))
+        return plataforma
 
-        self.session.execute(update_statement)
-        self.session.commit()
-        return self.obter(id_plataforma, usuario_logado)
+    def select_plataforma(self, column: str, value: str) -> models.Plataforma | None:
+        try:
+            plataforma = self.session.query(
+                models.Plataforma).filter_by(**{column:value}).first()
+        except Exception as e:
+            print(e)
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
+        
+        return plataforma
+    
+    def select_plataformas(self, column: str, value: str) -> List[models.Plataforma | Any]:
+        try:
+            plataformas = self.session.query(
+                models.Plataforma).filter_by(**{column:value}).all()
+        except Exception as e:
+            print(e)
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
 
-    def remover(self, id_plataforma: int, usuario_logado: models.Usuario):
-        plataforma_a_ser_excluida = self.obter(id_plataforma, usuario_logado)
+        return plataformas
 
-        if not plataforma_a_ser_excluida:
-            raise errors.erro_404("Plataforma não encontrada!")
+    def update_plataforma(
+            self,
+            id: int,
+            nova_plataforma: PlataformaCadastro) -> models.Plataforma:
+        try:
+            update_statement = (update(models.Plataforma).
+                                where(models.Plataforma.id == id).
+                                values(
+                                    nome=nova_plataforma.nome,
+                                    fabricante=nova_plataforma.fabricante,
+                                    observacoes=nova_plataforma.observacoes))
 
-        self.session.delete(plataforma_a_ser_excluida)
-        self.session.commit()
-        return {"msg": "removido"}
+            self.session.execute(update_statement)
+            self.session.commit()
+            return self.select_plataforma("id", str(id))
+
+        except Exception:
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
+
+    def delete_plataforma(self,
+                          plataforma: models.Plataforma) -> None:
+        try:
+            self.session.delete(plataforma)
+            self.session.commit()
+            return None
+
+        except Exception:
+            raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
