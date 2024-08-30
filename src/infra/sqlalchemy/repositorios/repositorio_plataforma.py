@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.infra.sqlalchemy.models import models
 from src.schemas.schemas import PlataformaCadastro
 from src.errors import errors
-from typing import List
+from typing import List, Any
 from sqlalchemy import update
 
 
@@ -32,7 +32,7 @@ class RepositorioPlataforma:
 
         return plataforma
 
-    def select_plataforma(self, column: str, value: str) -> models.Plataforma:
+    def select_plataforma(self, column: str, value: str) -> models.Plataforma | None:
         try:
             plataforma = self.session.query(
                 models.Plataforma).filter_by(**{column:value}).first()
@@ -40,21 +40,15 @@ class RepositorioPlataforma:
             print(e)
             raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
         
-        if not plataforma:
-            return None
-        
         return plataforma
     
-    def select_plataformas(self, column: str, value: str) -> List[models.Plataforma]:
+    def select_plataformas(self, column: str, value: str) -> List[models.Plataforma | Any]:
         try:
             plataformas = self.session.query(
                 models.Plataforma).filter_by(**{column:value}).all()
         except Exception as e:
             print(e)
             raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
-        
-        if not plataformas:
-            return None
 
         return plataformas
 

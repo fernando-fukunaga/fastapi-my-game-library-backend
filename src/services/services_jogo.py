@@ -53,10 +53,10 @@ def listar_jogos(session: Session,
 
     lista_de_jogos = []
     for plataforma in lista_de_plataformas:
-        lista_de_jogos.extend(
-            RepositorioJogo(session).select_jogos("id_plataforma",
-                                                  str(plataforma.id))
-        )
+        jogos = RepositorioJogo(session).select_jogos("id_plataforma",
+                                                      str(plataforma.id))
+        if jogos:
+            lista_de_jogos.extend(jogos)
     
     return lista_de_jogos
 

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import update
 from src.infra.sqlalchemy.models import models
 from src.errors import errors
-from typing import List
+from typing import List, Any
 from src.schemas.schemas import JogoPut
 
 
@@ -30,27 +30,21 @@ class RepositorioJogo:
         except Exception:
             raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
 
-    def select_jogo(self, column: str, value: str) -> models.Jogo:
+    def select_jogo(self, column: str, value: str) -> models.Jogo | None:
         try:
             jogo = self.session.query(
                 models.Jogo).filter_by(**{column: value}).first()
-        except Exception as e:
+        except Exception:
             raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
-
-        if not jogo:
-            return None
 
         return jogo
 
-    def select_jogos(self, column: str, value: str) -> List[models.Jogo]:
+    def select_jogos(self, column: str, value: str) -> List[models.Jogo | Any]:
         try:
             jogos = self.session.query(
-                models.Jogo).filter_by(**{column:value}).all()
-        except Exception as e:
+                models.Jogo).filter_by(**{column: value}).all()
+        except Exception:
             raise errors.erro_500("Ocorreu um erro interno! Tente novamente!")
-        
-        if not jogos:
-            return None
         
         return jogos
 

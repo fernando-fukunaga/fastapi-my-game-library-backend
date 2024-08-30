@@ -1,6 +1,6 @@
 # Testes para endpoints de autenticação
-from tests.config import client, password_context, headers, mock_user_model
-from unittest.mock import patch, MagicMock
+from tests.config import client, headers, mock_user_model
+from unittest.mock import patch
 
 patch_insert_usuario_in_services = "src.services.services_auth.RepositorioUsuario.insert_usuario"
 patch_select_usuario_in_services = "src.services.services_auth.RepositorioUsuario.select_usuario"
