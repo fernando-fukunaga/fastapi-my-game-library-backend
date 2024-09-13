@@ -3,8 +3,8 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from src.schemas import schemas
-from src.infra.sqlalchemy.config.database import obter_sessao
-from src.infra.sqlalchemy.models import models
+from src.infra.database.config.database import obter_sessao
+from src.infra.database.models import sqlalchemy_models
 from src.utils.auth_utils import obter_usuario_logado
 from src.services import services_auth
 
@@ -30,5 +30,5 @@ async def login(form_data=Depends(OAuth2PasswordRequestForm),
 
 
 @router.get("/me", response_model=schemas.UsuarioDadosSimples)
-async def me(usuario: models.Usuario = Depends(obter_usuario_logado)):
+async def me(usuario: models.UserEntity = Depends(obter_usuario_logado)):
     return usuario

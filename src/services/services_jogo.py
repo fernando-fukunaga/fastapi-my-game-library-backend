@@ -1,8 +1,8 @@
 # Módulo para interações com a tabela de jogos do banco
 from sqlalchemy.orm import Session
-from src.infra.sqlalchemy.models import models
-from src.infra.sqlalchemy.repositorios.repositorio_jogo import RepositorioJogo
-from src.infra.sqlalchemy.repositorios.repositorio_plataforma import RepositorioPlataforma
+from src.infra.database.models import sqlalchemy_models
+from src.infra.database.repositories.impl.repositorio_jogo import RepositorioJogo
+from src.infra.database.repositories.impl.repositorio_plataforma import RepositorioPlataforma
 from src.schemas import schemas
 from src.errors import errors
 from typing import List
@@ -10,7 +10,7 @@ from typing import List
 
 def _usuario_possui_plataforma(session: Session,
                                jogo: models.Jogo,
-                               usuario_logado: models.Usuario) -> bool:
+                               usuario_logado: models.UserEntity) -> bool:
     plataformas = RepositorioPlataforma(session).select_plataformas(
         "id_usuario",
         str(usuario_logado.id))
@@ -27,7 +27,7 @@ def _usuario_possui_plataforma(session: Session,
 
 def criar_jogo(session: Session,
                payload: schemas.JogoCadastro,
-               usuario_logado: models.Usuario):
+               usuario_logado: models.UserEntity):
     jogo = models.Jogo(nome=payload.nome,
                        id_plataforma=payload.id_plataforma,
                        ano=payload.ano,
@@ -43,7 +43,7 @@ def criar_jogo(session: Session,
 
 
 def listar_jogos(session: Session,
-                 usuario_logado: models.Usuario) -> List[models.Jogo]:
+                 usuario_logado: models.UserEntity) -> List[models.Jogo]:
     lista_de_plataformas = RepositorioPlataforma(session).select_plataformas(
         "id_usuario", str(usuario_logado.id)
     )
@@ -62,7 +62,7 @@ def listar_jogos(session: Session,
 
 
 def obter_jogo(session: Session,
-               usuario_logado: models.Usuario,
+               usuario_logado: models.UserEntity,
                id_jogo: int) -> models.Jogo:
     jogo = RepositorioJogo(session).select_jogo("id", str(id_jogo))
 
@@ -83,7 +83,7 @@ def obter_jogo(session: Session,
 def atualizar_jogo(session: Session,
                    id_jogo: int,
                    novo_jogo: schemas.JogoPut,
-                   usuario_logado: models.Usuario) -> models.Jogo:
+                   usuario_logado: models.UserEntity) -> models.Jogo:
     lista_de_jogos_usuario = listar_jogos(session, usuario_logado)
 
     if not lista_de_jogos_usuario:
@@ -98,7 +98,7 @@ def atualizar_jogo(session: Session,
 
 
 def remover_jogo(session: Session,
-                 usuario_logado: models.Usuario,
+                 usuario_logado: models.UserEntity,
                  id_jogo: int) -> None:
     lista_de_jogos_usuario = listar_jogos(session, usuario_logado)
 

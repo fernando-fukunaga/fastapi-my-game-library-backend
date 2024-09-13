@@ -1,6 +1,6 @@
 # Módulo para interações com a tabela de plataformas do banco
 from sqlalchemy.orm import Session
-from src.infra.sqlalchemy.models import models
+from src.infra.database.models import sqlalchemy_models
 from src.schemas.schemas import PlataformaCadastro
 from src.errors import errors
 from typing import List, Any

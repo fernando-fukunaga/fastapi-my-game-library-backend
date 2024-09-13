@@ -2,8 +2,7 @@
 from fastapi import APIRouter, Depends
 from typing import List
 from sqlalchemy.orm import Session
-from src.infra.sqlalchemy.config.database import obter_sessao
-from src.infra.sqlalchemy.repositorios.repositorio_jogo import RepositorioJogo
+from src.infra.database.config.database import obter_sessao
 from src.services import services_jogo
 from src.utils.auth_utils import obter_usuario_logado
 from src.schemas import schemas

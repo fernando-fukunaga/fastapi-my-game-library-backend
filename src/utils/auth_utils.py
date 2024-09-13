@@ -3,10 +3,10 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from jose import JWTError
-from src.infra.sqlalchemy.config.database import obter_sessao
+from src.infra.database.config.database import obter_sessao
 from src.infra.providers.token_provider import verificar_token
 from src.errors import errors
-from src.infra.sqlalchemy.repositorios.repositorio_usuario import \
+from src.infra.database.repositories.impl.sqlalchemy_user_repository import \
     RepositorioUsuario
 
 """Definindo schema de oauth2, para sempre exigir o token nos headers

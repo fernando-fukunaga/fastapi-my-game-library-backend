@@ -1,31 +1,18 @@
-# Módulo de modelos do banco de dados.
 from sqlalchemy import Column, Integer, String, DECIMAL, ForeignKey
 from sqlalchemy.orm import relationship
-from src.infra.sqlalchemy.config.database import Base
+from src.infra.database.config.database import Base
 
 
-class Usuario(Base):
-    """Representa o usuário da aplicação.
-
-    Será usada pelos repositórios que interagem com o banco.
-
-    Attributes:
-        id (int): número de identificação usuário
-        nome (str): nome do usuário
-        email (str): e-mail do usuário
-        username (str): username que será utilizado para identificar o
-            usuário e para que ele realize o login.
-        senha (str): senha do usuário para login
-    """
-    __tablename__ = "usuario"
+class UserSQLAlchemyModel(Base):
+    __tablename__ = "user"
 
     id = Column(Integer, primary_key=True)
-    nome = Column(String(55))
+    name = Column(String(55))
     email = Column(String(45), unique=True)
     username = Column(String(14), unique=True)
-    senha = Column(String(100))
+    password = Column(String(100))
 
-    plataformas = relationship("Plataforma", back_populates="usuario")
+    platforms = relationship("Plataforma", back_populates="user")
 
 
 class Plataforma(Base):
@@ -39,7 +26,7 @@ class Plataforma(Base):
         id_usuario (int): id do usuário a qual a plataforma pertence
         fabricante (str): nome da empresa que fabrica essa plataforma
         observacoes (str): obervações adicionais
-        usuario (Usuario): a pessoa dona da plataforma
+        usuario (UserSQLAlchemyModel): a pessoa dona da plataforma
         jogos (List[Jogo]): lista de jogos desta plataforma
     """
     __tablename__ = "plataforma"

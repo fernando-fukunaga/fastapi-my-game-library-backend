@@ -1,14 +1,14 @@
 from sqlalchemy.orm import Session
 from src.schemas.schemas import PlataformaCadastro
-from src.infra.sqlalchemy.models import models
-from src.infra.sqlalchemy.repositorios.repositorio_plataforma import RepositorioPlataforma
+from src.infra.database.models import sqlalchemy_models
+from src.infra.database.repositories.impl.repositorio_plataforma import RepositorioPlataforma
 from typing import List
 from src.errors import errors
 
 
 def criar_plataforma(session: Session,
                      payload: PlataformaCadastro,
-                     usuario_logado: models.Usuario) -> models.Plataforma:
+                     usuario_logado: models.UserEntity) -> models.Plataforma:
     plataforma = models.Plataforma(id_usuario=usuario_logado.id,
                                    nome=payload.nome,
                                    fabricante=payload.fabricante,
@@ -17,7 +17,7 @@ def criar_plataforma(session: Session,
 
 
 def listar_plataformas(session: Session,
-                       usuario_logado: models.Usuario) -> List[models.
+                       usuario_logado: models.UserEntity) -> List[models.
                                                                Plataforma]:
     id_usuario = str(usuario_logado.id)
     query_result = RepositorioPlataforma(session).select_plataformas(
@@ -29,7 +29,7 @@ def listar_plataformas(session: Session,
 
 def obter_plataforma(session: Session,
                      id_plataforma: int,
-                     usuario_logado: models.Usuario) -> models.Plataforma:
+                     usuario_logado: models.UserEntity) -> models.Plataforma:
     query_result = RepositorioPlataforma(session).select_plataforma(
         column="id", value=str(id_plataforma))
     if query_result == None:
@@ -44,7 +44,7 @@ def atualizar_plataforma(
         session: Session,
         id_plataforma: int,
         nova_plataforma: PlataformaCadastro,
-        usuario_logado: models.Usuario) -> models.Plataforma:
+        usuario_logado: models.UserEntity) -> models.Plataforma:
     plataforma_existe = RepositorioPlataforma(session).select_plataforma(
         "id", str(id_plataforma))
     
@@ -62,7 +62,7 @@ def atualizar_plataforma(
 def remover_plataforma(
         session: Session,
         id_plataforma: int,
-        usuario_logado: models.Usuario) -> dict:
+        usuario_logado: models.UserEntity) -> dict:
     plataforma_a_ser_excluida = RepositorioPlataforma(
         session).select_plataforma("id", str(id_plataforma))
 

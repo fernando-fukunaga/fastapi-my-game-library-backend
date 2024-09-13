@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends
 from typing import List
 from sqlalchemy.orm import Session
-from src.infra.sqlalchemy.config.database import obter_sessao
+from src.infra.database.config.database import obter_sessao
 from src.schemas import schemas
 from src.utils.auth_utils import obter_usuario_logado
 from src.services import services_plataforma

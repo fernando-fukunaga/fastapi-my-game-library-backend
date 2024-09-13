@@ -8,7 +8,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.routers import routers_auth, routers_plataforma, routers_jogo, router_home
-from src.infra.sqlalchemy.config.database import criar_banco_de_dados
+from src.infra.database.config.database import criar_banco_de_dados
 
 
 def create_app() -> FastAPI:
