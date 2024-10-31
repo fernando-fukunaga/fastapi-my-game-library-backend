@@ -1,10 +1,9 @@
 # Módulo para interações com a tabela de jogos do banco
 from sqlalchemy.orm import Session
-from src.infra.database.models import sqlalchemy_models
 from src.infra.database.repositories.impl.repositorio_jogo import RepositorioJogo
 from src.infra.database.repositories.impl.repositorio_plataforma import RepositorioPlataforma
-from src.schemas import schemas
-from src.errors import errors
+from src.infra.schemas import schemas
+from src.infra.errors import errors
 from typing import List
 
 

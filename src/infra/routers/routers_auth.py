@@ -2,9 +2,8 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from src.schemas import schemas
+from src.infra.schemas import schemas
 from src.infra.database.config.database import obter_sessao
-from src.infra.database.models import sqlalchemy_models
 from src.utils.auth_utils import obter_usuario_logado
 from src.services import services_auth
 

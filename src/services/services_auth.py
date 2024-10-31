@@ -1,9 +1,8 @@
 from src.infra.database.repositories.impl.sqlalchemy_user_repository import RepositorioUsuario
 from src.infra.providers.hash_provider import gerar_hash, verificar_senha
 from src.infra.providers.token_provider import gerar_token
-from src.schemas import schemas
-from src.infra.database.models import sqlalchemy_models
-from src.errors import errors
+from src.infra.schemas import schemas
+from src.infra.errors import errors
 from sqlalchemy.orm import Session
 
 

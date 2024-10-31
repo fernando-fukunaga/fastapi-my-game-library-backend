@@ -2,9 +2,8 @@ import logging
 
 from sqlalchemy.orm import Session
 from src.infra.database.repositories.abstract_user_repository import AbstractUserRepository
-from src.errors import errors
 from src.entities.user_entity import UserEntity
-from src.adapters.sqlalchemy.entity_adapters import sqlalchemy_user_adapter
+from src.adapters.sqlalchemy.user_entity_adapter import sqlalchemy_user_adapter
 from src.infra.database.models.sqlalchemy_models import UserSQLAlchemyModel
 
 logger = logging.getLogger(__name__)

@@ -1,9 +1,8 @@
 from sqlalchemy.orm import Session
-from src.schemas.schemas import PlataformaCadastro
-from src.infra.database.models import sqlalchemy_models
+from src.infra.schemas import PlataformaCadastro
 from src.infra.database.repositories.impl.repositorio_plataforma import RepositorioPlataforma
 from typing import List
-from src.errors import errors
+from src.infra.errors import errors
 
 
 def criar_plataforma(session: Session,

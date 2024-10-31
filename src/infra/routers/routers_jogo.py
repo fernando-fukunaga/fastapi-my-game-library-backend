@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from src.infra.database.config.database import obter_sessao
 from src.services import services_jogo
 from src.utils.auth_utils import obter_usuario_logado
-from src.schemas import schemas
+from src.infra.schemas import schemas
 
 # Criando router para endpoints de jogos, para melhorar o Swagger:
 router = APIRouter(tags=["Jogos"])

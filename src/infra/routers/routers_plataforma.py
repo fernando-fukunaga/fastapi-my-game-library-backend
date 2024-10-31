@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from typing import List
 from sqlalchemy.orm import Session
 from src.infra.database.config.database import obter_sessao
-from src.schemas import schemas
+from src.infra.schemas import schemas
 from src.utils.auth_utils import obter_usuario_logado
 from src.services import services_plataforma
 
@@ -22,7 +22,7 @@ async def cadastrar_plataforma(plataforma: schemas.PlataformaCadastro,
 
 
 @router.get("/plataformas",
-            response_model=List[schemas.PlataformaDadosSimples],)
+            response_model=List[schemas.PlataformaDadosSimples], )
 async def listar_plataformas(usuario_logado=Depends(obter_usuario_logado),
                              session: Session = Depends(obter_sessao)):
     return services_plataforma.listar_plataformas(session,
